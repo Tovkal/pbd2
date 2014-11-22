@@ -4,3 +4,15 @@
 .idea/deployment.xml
 
 .idea/scopes/scope_settings.xml
+
+*.iml
+
+.idea/encodings.xml
+
+.idea/misc.xml
+
+.idea/modules.xml
+
+.idea/sqldialects.xml
+
+.idea/vcs.xml

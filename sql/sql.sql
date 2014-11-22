@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS DBII_08 CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS BDII_08 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-USE DBII_08;
+USE BDII_08;
 
 CREATE TABLE IF NOT EXISTS Seccio (
 	codi_seccio INT AUTO_INCREMENT,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Seccio (
 
 CREATE TABLE IF NOT EXISTS Privilegi (
 	id INT AUTO_INCREMENT,
-	privilegi VARCHAR(20),
+	nivellPrivilegi VARCHAR(20),
 	PRIMARY KEY (id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS Usuari (
 	id INT,
 	userID VARCHAR(100) NOT NULL UNIQUE,
 	nom VARCHAR(30) NOT NULL,
-	privilegi INT NOT NULL,
+	nivellPrivilegi INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (privilegi) REFERENCES Privilegi(id)
+	FOREIGN KEY (nivellPrivilegi) REFERENCES Privilegi(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS Anunci (
@@ -45,6 +45,6 @@ CREATE TABLE IF NOT EXISTS Anunci (
 CREATE TRIGGER augmentar_contador_canvis AFTER UPDATE ON Anunci 
 FOR EACH ROW SET @nombre_canvis = @nombre_canvis + 1;
 
-INSERT INTO Privilegi (privilegi) VALUES ('Administrador'), ('Anunciant'), ('Internauta');
+INSERT INTO Privilegi (nivellPrivilegi) VALUES ('Administrador'), ('Anunciant'), ('Internauta');
 INSERT INTO Seccio (descripcio, preu, foto_generica_seccio) VALUES ('Vivendes', '1', 'casa.png'), ('Cotxes', '0.5', 'cotxo.png'), ('Ordinadors', '0.25', 'alienware.png');
-INSERT INTO Usuari (userID, nom, privilegi) VALUES ('admin', 'Toni Más', 1);
+INSERT INTO Usuari (userID, nom, nivellPrivilegi) VALUES ('admin', 'Toni Más', 1);
