@@ -5,6 +5,10 @@
  * Date: 21/11/14
  * Time: 22:11
  */
+// Start the session
+if(!isset($_SESSION)){
+    session_start();
+}
 
 include "common.php";
 
@@ -20,9 +24,6 @@ if(Common::is_ajax()) {
 }
 
 function lookupUser() {
-    // Start the session
-    session_start();
-
     // Fetch user's data if it's already registered
     $db = Common::initPDOConnection("BDII_08");
     $select = $db->prepare("SELECT * FROM Usuari WHERE UserID = :userID");
@@ -35,9 +36,12 @@ function lookupUser() {
                     "user" => array(
                         "userID" => $result['userID'],
                         "nom" => $result['nom'],
-                        "nivellPrivilegi" => $result['nivellPrivilegi']
+                        "id_privilegi" => $result['id_privilegi']
                     )
         );
+        $_SESSION['userID'] = $result['userID'];
+        $_SESSION['nom'] = $result['nom'];
+        $_SESSION['id_privilegi'] = $result['id_privilegi'];
         return $response;
     } else {
         return array("error" => true, "error_msg" => "No s'ha trobat l'usuari indicat");

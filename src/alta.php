@@ -5,6 +5,10 @@
  * Date: 21/11/14
  * Time: 20:09
  */
+// Start the session
+if(!isset($_SESSION)){
+    session_start();
+}
 
 include "common.php";
 
@@ -24,7 +28,7 @@ function createUser() {
 
     // Fetch user's data if it's already registered
     $db = Common::initPDOConnection("BDII_08");
-    $select = $db->prepare("INSERT INTO Usuari (userID, nom, nivellPrivilegi) VALUES (:userID, :nom, 2)"); //Anuncians = nivell 2
+    $select = $db->prepare("INSERT INTO Usuari (userID, nom, id_privilegi) VALUES (:userID, :nom, 2)"); //Anuncians = nivell 2
 
     $wasSuccessful = $select->execute(array('userID' => $_POST['userID'], 'nom' => $_POST['nom']));
     if ($wasSuccessful) {
@@ -32,9 +36,12 @@ function createUser() {
             "user" => array(
                 "userID" => $_POST['userID'],
                 "nom" => $_POST['nom'],
-                "nivellPrivilegi" => 2
+                "id_privilegi" => 2
             )
         );
+        $_SESSION['userID'] = $_POST['userID'];
+        $_SESSION['nom'] = $_POST['nom'];
+        $_SESSION['id_privilegi'] = 2;
         return $response;
     } else {
         return array("error" => true, "error_msg" => "No s'ha pogut inserir l'usuari", "db_error_msg" => ($select->errorInfo()));

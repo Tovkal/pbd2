@@ -16,3 +16,9 @@
 .idea/sqldialects.xml
 
 .idea/vcs.xml
+
+*.ids
+
+.idea/dataSources.local.xml
+
+.idea/dataSources.xml

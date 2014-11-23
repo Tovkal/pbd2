@@ -5,6 +5,10 @@
  * Date: 22/11/14
  * Time: 15:03
  */
+// Start the session
+if(!isset($_SESSION)){
+    session_start();
+}
 
 class Common {
 

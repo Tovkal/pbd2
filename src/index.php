@@ -1,7 +1,9 @@
 <?php
 // Start the session
-session_start();
-?>
+if(!isset($_SESSION)){
+    session_start();
+}?>
+
 <html>
 <head>
     <?php include("includes/head.html"); ?>
@@ -15,9 +17,7 @@ session_start();
         </div>
     </div>
     <div class="row">
-        <div class="col-md-9 border">
-            (Anuncis aquí)
-        </div>
+        <div id="content" class="col-md-9 border">&nbsp;</div>
         <div class="col-md-3 border">
             <div class="row row-top-margin">
                 <div class="col-md-12">
@@ -41,6 +41,7 @@ session_start();
                         <div class="row row-centered">
                             <button id="loginButton" type="button" class="btn btn-primary" onclick="doLogin();">Accedir</button>
                             <button id="signupButton" type="button" class="btn btn-primary" onclick="doSignup();">Donar'se d'alta</button>
+                            <button id="modifyProfileButton" type="button" class="btn btn-primary hidden" onclick="modifyProfile();">Modificar perfil</button>
                             <button id="logoutButton" type="button" class="btn btn-primary hidden" onclick="doLogout();">Logout</button>
                         </div>
                     </form>
@@ -65,13 +66,25 @@ session_start();
 
 <script type="text/javascript">
 
+    var content = $("#content");
     var userForm = $("#userForm");
     var loginButton = $("#loginButton");
     var signupButton = $("#signupButton");
+    var modifyProfileButton = $("#modifyProfileButton");
     var logoutButton = $("#logoutButton");
     var userID = $("#userID");
     var userInfo = $("#userInfo");
     var expandedSignup = $("#expandedSignup");
+
+    $(document).ready(function() {
+        showLoggedIn();
+        showAnuncis();
+        //getPHPFile('profile', content);
+    });
+
+    function showAnuncis() {
+        getPHPFile('anuncis', content);
+    }
 
     function doLogin() {
         if (expandedSignup.isVisible()) {
@@ -95,6 +108,7 @@ session_start();
                     showSuccess("Estas conectat, benvingut");
                     loginButton.hideBootstrap();
                     signupButton.hideBootstrap();
+                    modifyProfileButton.showBootstrap();
                     logoutButton.showBootstrap();
                     userID.hideBootstrap();
                     userInfo.showBootstrap();
@@ -106,6 +120,18 @@ session_start();
                 //TODO show error
             }
         });
+    }
+
+    function showLoggedIn() {
+        <?php if(isset($_SESSION['userID']) && !empty($_SESSION['userID'])) { ?>
+        loginButton.hideBootstrap();
+        signupButton.hideBootstrap();
+        modifyProfileButton.showBootstrap();
+        logoutButton.showBootstrap();
+        userID.hideBootstrap();
+        userInfo.showBootstrap();
+        userInfo.text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
+        <?php } ?>
     }
 
     function doSignup() {
@@ -161,11 +187,14 @@ session_start();
         });
     }
 
-    function doLogout() {
-        <?php unset($_SESSION['userID']); ?>
+    function modifyProfile() {
+        getPHPFile('profile', content);
+    }
 
+    function doLogout() {
         loginButton.showBootstrap();
         signupButton.showBootstrap();
+        modifyProfileButton.hideBootstrap();
         logoutButton.hideBootstrap();
         userID.showBootstrap();
         userInfo.hideBootstrap();
@@ -174,6 +203,12 @@ session_start();
         if (loginButton.hasClass('disabled')) {
             loginButton.removeClass('disabled');
         }
+
+        /*
+         * Per qualque motiu, quan aqui posava un session_destroy aquest s'executava quan refrescaves sa pàgina un parell
+         * de vegades sense cridar a aquesta funcio, per això he afegit un php especific per logout
+         */
+        window.location = "logout.php";
     }
 
     var $alert = $("#alert");
