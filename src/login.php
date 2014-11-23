@@ -8,7 +8,7 @@
 
 include "common.php";
 
-if(is_ajax()) {
+if(Common::is_ajax()) {
     if(isset($_POST['userID']) && !empty($_POST['userID'])) {
         echo json_encode(lookupUser());
     } else {
@@ -19,12 +19,6 @@ if(is_ajax()) {
     exit();
 }
 
-//Function to check if the request is an AJAX request
-function is_ajax() {
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-}
-
-
 function lookupUser() {
     // Start the session
     session_start();
@@ -33,20 +27,19 @@ function lookupUser() {
     $db = Common::initPDOConnection("BDII_08");
     $select = $db->prepare("SELECT * FROM Usuari WHERE UserID = :userID");
 
-    $select->execute(array('userID' => $_POST['userID']));
-    if ($select->rowCount() == 1) {
+    $wasSuccessful = $select->execute(array('userID' => $_POST['userID']));
+    if ($wasSuccessful && $select->rowCount() == 1) {
         $result = $select->fetch(PDO::FETCH_ASSOC);
 
-        $user = array("error" => false,
+        $response = array("error" => false,
                     "user" => array(
                         "userID" => $result['userID'],
                         "nom" => $result['nom'],
                         "nivellPrivilegi" => $result['nivellPrivilegi']
                     )
         );
-        return $user;
+        return $response;
     } else {
         return array("error" => true, "error_msg" => "No s'ha trobat l'usuari indicat");
     }
-
 }

@@ -19,4 +19,9 @@ class Common {
         return new PDO('mysql:host=localhost;dbname=' . $dbName . ';charset=utf8', 'bd2', 'bd2');
 
     }
+
+    //Function to check if the request is an AJAX request
+    public static function is_ajax() {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+    }
 }
