@@ -8,28 +8,45 @@
 
 include "common.php";
 
-// Start the session
-session_start();
+if(is_ajax()) {
+    if(isset($_POST['userID']) && !empty($_POST['userID'])) {
+        echo json_encode(lookupUser());
+    } else {
+        $result = array("error" => true, "error_msg" => "No s'ha indicat una id d'usuari");
+        echo json_encode($result);
+    }
 
-// Fetch user's data if it's already registered
-$db = Common::initPDOConnection("BDII_08");
-$select = $db->prepare("SELECT * FROM Usuari WHERE UserID = :userID");
-$select->execute(array('userID' => $_POST['userID']));
-if ($select->rowCount() == 1) {
-    $result = $select->fetch(PDO::FETCH_ASSOC);
-    $_SESSION['userID'] = $result['userID'];
-    $_SESSION['nom'] = $result['nom'];
-    $_SESSION['nivellPrivilegi'] = $result['nivellPrivilegi'];
-} else {
-    $_SESSION['loginError'] = true;
+    exit();
 }
 
-// Print results
-//if(!empty($_SESSION['userID']) && !empty($_SESSION['nom']) && !empty($_SESSION['nivellPrivilegi'])) {
-//    echo 'userID' . $_SESSION['userID'];
-//    echo 'nom' . $_SESSION['nom'];
-//    echo 'nivellPrivilegi' . $_SESSION['nivellPrivilegi'];
-//}
+//Function to check if the request is an AJAX request
+function is_ajax() {
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+}
 
-// Return to the home page
-header('Location: index.php');
+
+function lookupUser() {
+    // Start the session
+    session_start();
+
+    // Fetch user's data if it's already registered
+    $db = Common::initPDOConnection("BDII_08");
+    $select = $db->prepare("SELECT * FROM Usuari WHERE UserID = :userID");
+
+    $select->execute(array('userID' => $_POST['userID']));
+    if ($select->rowCount() == 1) {
+        $result = $select->fetch(PDO::FETCH_ASSOC);
+
+        $user = array("error" => false,
+                    "user" => array(
+                        "userID" => $result['userID'],
+                        "nom" => $result['nom'],
+                        "nivellPrivilegi" => $result['nivellPrivilegi']
+                    )
+        );
+        return $user;
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha trobat l'usuari indicat");
+    }
+
+}
