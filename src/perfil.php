@@ -13,11 +13,6 @@ if(!isset($_SESSION)){
 
 include "common.php";
 
-/*$_SESSION['userID'] = "TEST";
-$_SESSION['nom'] = "TEST TEST TEST";
-$_SESSION['id_privilegi'] = "1";
-$_SESSION['descripcio_privilegi'] = "Anunciant";*/
-
 // Fetch user's privilege description if not known
 if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_privilegi'])) {
     $db = Common::initPDOConnection("BDII_08");
@@ -39,7 +34,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form name="profile" class="form-inline" role="form">
+            <form name="profile" class="form-inline" role="form" action="modificarPerfil.php" method="post">
                 <div class="form-group form-group-right-padding">
                     <label for="userID">Nom d'usuari</label>
                         <input type="text" id="userID" name="userID" class="form-control" value="<?php echo $_SESSION['userID'] ?>">
@@ -52,6 +47,10 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
                 <div class="form-group">
                     <label for="tipusUsuari">Tipus d'usuari</label>
                         <p class="form-control-static" id="tipusUsuari"><?php echo $_SESSION['descripcio_privilegi'] ?></p>
+                </div>
+
+                <div class="pull-right row-top-margin">
+                    <button type="button" class="btn btn-primary">Modificar</button>
                 </div>
             </form>
         </div>

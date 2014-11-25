@@ -188,7 +188,7 @@ if(!isset($_SESSION)){
     }
 
     function modifyProfile() {
-        getPHPFile('profile', content);
+        getPHPFile('perfil', content);
     }
 
     function doLogout() {
