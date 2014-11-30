@@ -26,7 +26,7 @@ if(Common::is_ajax()) {
 function lookupUser() {
     // Fetch user's data if it's already registered
     $db = Common::initPDOConnection("BDII_08");
-    $select = $db->prepare("SELECT * FROM Usuari WHERE UserID = :userID");
+    $select = $db->prepare("SELECT * FROM Usuari WHERE userID = :userID");
 
     $wasSuccessful = $select->execute(array('userID' => $_POST['userID']));
     if ($wasSuccessful && $select->rowCount() == 1) {
@@ -39,6 +39,7 @@ function lookupUser() {
                         "id_privilegi" => $result['id_privilegi']
                     )
         );
+        $_SESSION['id'] = $result['id'];
         $_SESSION['userID'] = $result['userID'];
         $_SESSION['nom'] = $result['nom'];
         $_SESSION['id_privilegi'] = $result['id_privilegi'];

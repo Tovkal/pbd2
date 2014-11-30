@@ -32,9 +32,14 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 ?>
 
 <div class="container-fluid">
+    <div class="row row-top-margin">
+        <div class="col-md-12">
+            <div id="mainAlert" class="hidden" role="alert">Alert</div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
-            <form name="profile" class="form-inline" role="form" action="modificarPerfil.php" method="post">
+            <form id="profileForm" name="profileForm" class="form-inline" role="form" action="modificarPerfil.php" method="post">
                 <div class="form-group form-group-right-padding">
                     <label for="userID">Nom d'usuari</label>
                         <input type="text" id="userID" name="userID" class="form-control" value="<?php echo $_SESSION['userID'] ?>">
@@ -50,9 +55,42 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
                 </div>
 
                 <div class="pull-right row-top-margin">
-                    <button type="button" class="btn btn-primary">Modificar</button>
+                    <button type="button" class="btn btn-primary" onclick="processUpdate()">Modificar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script type="application/javascript">
+    function processUpdate() {
+        var data = $("#profileForm").serialize();
+        var $mainAlert = $("#mainAlert");
+        $.ajax({
+            type: "POST",
+            datatype: "json",
+            url: "modificarPerfil.php",
+            data: data,
+            success: function(returned_data) {
+                var result = JSON.parse(returned_data);
+
+                if (result['error'] == true) {
+                    showError($mainAlert, result['error_msg']);
+                } else {
+                    var user = result['user'];
+
+                    $("#userID").value = user['userID'];
+                    $("#nom").value = user['nom'];
+
+                    showSuccess($mainAlert, "S'han actualitzat les dades correctament");
+
+                    $("#userInfo").text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
+                }
+            },
+            error: function() {
+                //show alert error
+                //TODO show error
+            }
+        });
+    }
+</script>

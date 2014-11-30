@@ -21,7 +21,7 @@ if(!isset($_SESSION)){
         <div class="col-md-3 border">
             <div class="row row-top-margin">
                 <div class="col-md-12">
-                    <div id="alert" class="hidden" role="alert">Iep</div>
+                    <div id="sideAlert" class="hidden" role="alert">Alert</div>
                 </div>
             </div>
 
@@ -58,6 +58,7 @@ if(!isset($_SESSION)){
             <div id="adminPanel" class="row row-centered row-top-margin">
                 <div class="col-md-12">
                     <button type="button" class="btn btn-primary">Administrar seccions</button>
+                    <button type="button" class="btn btn-primary">Veure usuaris</button>
                 </div>
             </div>
         </div>
@@ -66,32 +67,33 @@ if(!isset($_SESSION)){
 
 <script type="text/javascript">
 
-    var content = $("#content");
-    var userForm = $("#userForm");
-    var loginButton = $("#loginButton");
-    var signupButton = $("#signupButton");
-    var modifyProfileButton = $("#modifyProfileButton");
-    var logoutButton = $("#logoutButton");
-    var userID = $("#userID");
-    var userInfo = $("#userInfo");
-    var expandedSignup = $("#expandedSignup");
+    var $content = $("#content");
+    var $userForm = $("#userForm");
+    var $loginButton = $("#loginButton");
+    var $signupButton = $("#signupButton");
+    var $modifyProfileButton = $("#modifyProfileButton");
+    var $logoutButton = $("#logoutButton");
+    var $userID = $("#userID");
+    var $userInfo = $("#userInfo");
+    var $expandedSignup = $("#expandedSignup");
+    var $sideAlert = $("#sideAlert");
 
     $(document).ready(function() {
         showLoggedIn();
         showAnuncis();
-        //getPHPFile('profile', content);
+        //getPHPFile('profile', $content);
     });
 
     function showAnuncis() {
-        getPHPFile('anuncis', content);
+        getPHPFile('anuncis', $content);
     }
 
     function doLogin() {
-        if (expandedSignup.isVisible()) {
+        if ($expandedSignup.isVisible()) {
             hideSignupForm();
         }
 
-        var data = userForm.serialize();
+        var data = $userForm.serialize();
         $.ajax({
             type: "POST",
             datatype: "json",
@@ -101,18 +103,18 @@ if(!isset($_SESSION)){
                 var result = JSON.parse(returned_data);
 
                 if (result['error'] == true) {
-                    showError(result['error_msg']);
+                    showError($sideAlert, result['error_msg']);
                 } else {
                     var user = result['user'];
 
-                    showSuccess("Estas conectat, benvingut");
-                    loginButton.hideBootstrap();
-                    signupButton.hideBootstrap();
-                    modifyProfileButton.showBootstrap();
-                    logoutButton.showBootstrap();
-                    userID.hideBootstrap();
-                    userInfo.showBootstrap();
-                    userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
+                    showSuccess($sideAlert, "Estas conectat, benvingut");
+                    $loginButton.hideBootstrap();
+                    $signupButton.hideBootstrap();
+                    $modifyProfileButton.showBootstrap();
+                    $logoutButton.showBootstrap();
+                    $userID.hideBootstrap();
+                    $userInfo.showBootstrap();
+                    $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
             },
             error: function() {
@@ -124,39 +126,39 @@ if(!isset($_SESSION)){
 
     function showLoggedIn() {
         <?php if(isset($_SESSION['userID']) && !empty($_SESSION['userID'])) { ?>
-        loginButton.hideBootstrap();
-        signupButton.hideBootstrap();
-        modifyProfileButton.showBootstrap();
-        logoutButton.showBootstrap();
-        userID.hideBootstrap();
-        userInfo.showBootstrap();
-        userInfo.text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
+        $loginButton.hideBootstrap();
+        $signupButton.hideBootstrap();
+        $modifyProfileButton.showBootstrap();
+        $logoutButton.showBootstrap();
+        $userID.hideBootstrap();
+        $userInfo.showBootstrap();
+        $userInfo.text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
         <?php } ?>
     }
 
     function doSignup() {
-        loginButton.addClass("disabled");
+        $loginButton.addClass("disabled");
         showSignupForm();
-        showInfo("Insereix el teu nom i cognoms");
-        signupButton.attr("onClick", "doSignupAjaxCall();");
-        if(userID.isEmpty()) {
-            showError("Escriu un nom d'usuari");
-            userID.on("keypress", function() {
-                fadeAlert();
+        showInfo($sideAlert, "Insereix el teu nom i cognoms");
+        $signupButton.attr("onClick", "doSignupAjaxCall();");
+        if($userID.isEmpty()) {
+            showError($sideAlert, "Escriu un nom d'usuari");
+            $userID.on("keypress", function() {
+                fadeAlert($sideAlert);
             });
         }
     }
 
     function showSignupForm() {
-        expandedSignup.showBootstrap();
+        $expandedSignup.showBootstrap();
     }
 
     function hideSignupForm() {
-        expandedSignup.hideBootstrap();
+        $expandedSignup.hideBootstrap();
     }
 
     function doSignupAjaxCall() {
-        var data = userForm.serialize();
+        var data = $userForm.serialize();
         $.ajax({
             type: "POST",
             datatype: "json",
@@ -166,18 +168,18 @@ if(!isset($_SESSION)){
                 var result = JSON.parse(returned_data);
 
                 if (result['error'] == true) {
-                    showError(result['error_msg']);
+                    showError($sideAlert, result['error_msg']);
                     console.log(result['db_error_msg']);
                 } else {
                     var user = result['user'];
 
-                    showSuccess("Estas conectat, benvingut");
-                    loginButton.hideBootstrap();
-                    signupButton.hideBootstrap();
-                    logoutButton.showBootstrap();
-                    userID.hideBootstrap();
-                    userInfo.showBootstrap();
-                    userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
+                    showSuccess($sideAlert, "Estas conectat, benvingut");
+                    $loginButton.hideBootstrap();
+                    $signupButton.hideBootstrap();
+                    $logoutButton.showBootstrap();
+                    $userID.hideBootstrap();
+                    $userInfo.showBootstrap();
+                    $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
             },
             error: function() {
@@ -188,20 +190,20 @@ if(!isset($_SESSION)){
     }
 
     function modifyProfile() {
-        getPHPFile('perfil', content);
+        getPHPFile('perfil', $content);
     }
 
     function doLogout() {
-        loginButton.showBootstrap();
-        signupButton.showBootstrap();
-        modifyProfileButton.hideBootstrap();
-        logoutButton.hideBootstrap();
-        userID.showBootstrap();
-        userInfo.hideBootstrap();
+        $loginButton.showBootstrap();
+        $signupButton.showBootstrap();
+        $modifyProfileButton.hideBootstrap();
+        $logoutButton.hideBootstrap();
+        $userID.showBootstrap();
+        $userInfo.hideBootstrap();
 
 
-        if (loginButton.hasClass('disabled')) {
-            loginButton.removeClass('disabled');
+        if ($loginButton.hasClass('disabled')) {
+            $loginButton.removeClass('disabled');
         }
 
         /*
@@ -209,33 +211,6 @@ if(!isset($_SESSION)){
          * de vegades sense cridar a aquesta funcio, per això he afegit un php especific per logout
          */
         window.location = "logout.php";
-    }
-
-    var $alert = $("#alert");
-
-    function showError(msg) {
-        setupAlert("alert-danger fade-in", msg);
-    }
-
-    function showSuccess(msg) {
-        setupAlert("alert-success fade-in", msg);
-        setTimeout(fadeAlert, 3000);
-    }
-
-    function showInfo(msg) {
-        setupAlert("alert-info fade-in", msg);
-    }
-
-    function setupAlert(alertClass, msg) {
-        $alert.attr("class", "alert " + alertClass);
-        $alert.text(msg);
-    }
-
-    function fadeAlert() {
-        $alert.fadeOut("slow", function() {
-            $alert.attr("class", "hidden");
-            $alert.removeAttr("style");
-        });
     }
 
     (function($) {

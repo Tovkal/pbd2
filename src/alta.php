@@ -24,8 +24,6 @@ if(Common::is_ajax()) {
 }
 
 function createUser() {
-    session_start();
-
     // Fetch user's data if it's already registered
     $db = Common::initPDOConnection("BDII_08");
     $select = $db->prepare("INSERT INTO Usuari (userID, nom, id_privilegi) VALUES (:userID, :nom, 2)"); //Anuncians = nivell 2
@@ -39,6 +37,7 @@ function createUser() {
                 "id_privilegi" => 2
             )
         );
+        $_SESSION['id'] = $db->lastInsertId("Usuari");
         $_SESSION['userID'] = $_POST['userID'];
         $_SESSION['nom'] = $_POST['nom'];
         $_SESSION['id_privilegi'] = 2;
