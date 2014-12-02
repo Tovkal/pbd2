@@ -12,5 +12,5 @@ if(!isset($_SESSION)){
 }
 
 session_destroy();
-header("location:index.php"); //to redirect back to "index.php" after logging out
+header("location:../index.php"); //to redirect back to "index.php" after logging out
 exit();

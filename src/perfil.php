@@ -52,7 +52,8 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <form id="profileForm" name="profileForm" class="form-inline" role="form" action="dao/modificarPerfil.php" method="post">
+                    <form id="profileForm" name="profileForm" class="form-inline" role="form">
+                        <input id="action" name="action" type="hidden" value="update" />
                         <div class="form-group form-group-right-padding">
                             <label for="userID">Nom d'usuari</label>
                             <input type="text" id="userID" name="userID" class="form-control" value="<?php echo $_SESSION['userID'] ?>">
@@ -87,7 +88,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
         $.ajax({
             type: "POST",
             datatype: "json",
-            url: "dao/modificarPerfil.php",
+            url: "dao/usuari.php",
             data: data,
             success: function(returned_data) {
                 var result = JSON.parse(returned_data);

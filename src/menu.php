@@ -19,9 +19,12 @@ if(!isset($_SESSION)){
 <div class="row">
     <div class="col-md-12">
         <form id="userForm" name="userForm">
+            <input id="action" name="action" type="hidden" value="" />
             <div class="form-group row-centered">
                 <label for="userID">Nom d'usuari</label>
                 <input type="text" id="userID" name="userID" class="form-control" />
+                <label for="password">Contrasenya</label>
+                <input type="text" id="password" name="password" class="form-control" />
                 <p id="userInfo" class="hidden"></p>
                 <div id="expandedSignup" class="row-top-margin hidden">
                     <label for="nom">Nom i cognoms</label>
@@ -61,12 +64,22 @@ if(!isset($_SESSION)){
     var $modifyProfileButton = $userForm.find("#modifyProfileButton");
     var $logoutButton = $userForm.find("#logoutButton");
     var $userID = $userForm.find("#userID");
+    var $password = $userForm.find("#password");
     var $userInfo = $userForm.find("#userInfo");
     var $expandedSignup = $userForm.find("#expandedSignup");
-    var $sideAlert = $userForm.find("#sideAlert");
+    var $sideAlert = $("#sideAlert");
+    var $action = $userForm.find("#action");
 
     $(document).ready(function() {
        showLoggedIn();
+
+        // After writing password and pressing enter, submit form to login.
+        $password.keydown(function() {
+            if (event.which == 13) {
+                event.preventDefault();
+                doLogin();
+            }
+        });
     });
 
     function showLoggedIn() {
@@ -76,6 +89,7 @@ if(!isset($_SESSION)){
         $modifyProfileButton.showBootstrap();
         $logoutButton.showBootstrap();
         $userID.hideBootstrap();
+        $password.hideBootstrap();
         $userInfo.showBootstrap();
         $userInfo.text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
         <?php } ?>
@@ -86,18 +100,16 @@ if(!isset($_SESSION)){
             hideSignupForm();
         }
 
+        $action.val("login");
+
         var data = $userForm.serialize();
-        var tal = $userID.serialize();
-        $userID.value = "patata";
-        console.log();
         $.ajax({
             type: "POST",
             datatype: "json",
-            url: "dao/login.php",
+            url: "dao/usuari.php",
             data: data,
             success: function(returned_data) {
                 var result = JSON.parse(returned_data);
-
                 if (result['error'] == true) {
                     showError($sideAlert, result['error_msg']);
                 } else {
@@ -109,6 +121,7 @@ if(!isset($_SESSION)){
                     $modifyProfileButton.showBootstrap();
                     $logoutButton.showBootstrap();
                     $userID.hideBootstrap();
+                    $password.hideBootstrap();
                     $userInfo.showBootstrap();
                     $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
@@ -125,9 +138,14 @@ if(!isset($_SESSION)){
         showSignupForm();
         showInfo($sideAlert, "Insereix el teu nom i cognoms");
         $signupButton.attr("onClick", "doSignupAjaxCall();");
-        if($userID.isEmpty()) {
+        if ($userID.isEmpty()) {
             showError($sideAlert, "Escriu un nom d'usuari");
             $userID.on("keypress", function() {
+                fadeAlert($sideAlert);
+            });
+        } else if ($password.isEmpty()) {
+            showError($sideAlert, "Escriu una contrasenya");
+            $password.on("keypress", function() {
                 fadeAlert($sideAlert);
             });
         }
@@ -142,11 +160,13 @@ if(!isset($_SESSION)){
     }
 
     function doSignupAjaxCall() {
+        $action.val("signup");
+
         var data = $userForm.serialize();
         $.ajax({
             type: "POST",
             datatype: "json",
-            url: "dao/alta.php",
+            url: "dao/usuari.php",
             data: data,
             success: function(returned_data) {
                 var result = JSON.parse(returned_data);
@@ -163,6 +183,7 @@ if(!isset($_SESSION)){
                     $signupButton.hideBootstrap();
                     $logoutButton.showBootstrap();
                     $userID.hideBootstrap();
+                    $password.hideBootstrap();
                     $userInfo.showBootstrap();
                     $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
@@ -184,6 +205,7 @@ if(!isset($_SESSION)){
         $modifyProfileButton.hideBootstrap();
         $logoutButton.hideBootstrap();
         $userID.showBootstrap();
+        $password.showBootstrap();
         $userInfo.hideBootstrap();
 
 
