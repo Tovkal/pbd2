@@ -31,33 +31,51 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 }
 ?>
 
-<div class="container-fluid">
-    <div class="row row-top-margin">
-        <div class="col-md-12">
-            <div id="mainAlert" class="hidden" role="alert">Alert</div>
+<html>
+<head>
+    <?php include "includes/head.html"; ?>
+</head>
+<body>
+
+<div class="wrapper container-fluid">
+    <div class="row">
+        <div class="col-md-12 border" >
+            <a href="index.php" >Inici</a>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <form id="profileForm" name="profileForm" class="form-inline" role="form" action="modificarPerfil.php" method="post">
-                <div class="form-group form-group-right-padding">
-                    <label for="userID">Nom d'usuari</label>
-                        <input type="text" id="userID" name="userID" class="form-control" value="<?php echo $_SESSION['userID'] ?>">
+        <div id="content" class="col-md-9 border">
+            <div class="row row-top-margin">
+                <div class="col-md-12">
+                    <div id="mainAlert" class="hidden" role="alert">Alert</div>
                 </div>
-                <div class="form-group form-group-right-padding">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="profileForm" name="profileForm" class="form-inline" role="form" action="dao/modificarPerfil.php" method="post">
+                        <div class="form-group form-group-right-padding">
+                            <label for="userID">Nom d'usuari</label>
+                            <input type="text" id="userID" name="userID" class="form-control" value="<?php echo $_SESSION['userID'] ?>">
+                        </div>
+                        <div class="form-group form-group-right-padding">
 
-                    <label for="nom">Nom i Cognoms </label>
-                        <input type="text" id="nom" name="nom" class="form-control" value="<?php echo $_SESSION['nom'] ?>">
-                </div>
-                <div class="form-group">
-                    <label for="tipusUsuari">Tipus d'usuari</label>
-                        <p class="form-control-static" id="tipusUsuari"><?php echo $_SESSION['descripcio_privilegi'] ?></p>
-                </div>
+                            <label for="nom">Nom i Cognoms </label>
+                            <input type="text" id="nom" name="nom" class="form-control" value="<?php echo $_SESSION['nom'] ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="tipusUsuari">Tipus d'usuari</label>
+                            <p class="form-control-static" id="tipusUsuari"><?php echo $_SESSION['descripcio_privilegi'] ?></p>
+                        </div>
 
-                <div class="pull-right row-top-margin">
-                    <button type="button" class="btn btn-primary" onclick="processUpdate()">Modificar</button>
+                        <div class="pull-right row-top-margin">
+                            <button type="button" class="btn btn-primary" onclick="processUpdate()">Modificar</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+        </div>
+        <div id="menuColumn" class="col-md-3 border">
+            <?php include 'menu.php';?>
         </div>
     </div>
 </div>
@@ -69,7 +87,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
         $.ajax({
             type: "POST",
             datatype: "json",
-            url: "modificarPerfil.php",
+            url: "dao/modificarPerfil.php",
             data: data,
             success: function(returned_data) {
                 var result = JSON.parse(returned_data);
@@ -77,14 +95,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
                 if (result['error'] == true) {
                     showError($mainAlert, result['error_msg']);
                 } else {
-                    var user = result['user'];
-
-                    $("#userID").value = user['userID'];
-                    $("#nom").value = user['nom'];
-
-                    showSuccess($mainAlert, "S'han actualitzat les dades correctament");
-
-                    $("#userInfo").text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
+                    location.reload();
                 }
             },
             error: function() {
@@ -94,3 +105,6 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
         });
     }
 </script>
+
+</body>
+</html>

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: tovkal
+ * Date: 2/12/14
+ * Time: 14:52
+ */
 // Start the session
 if(!isset($_SESSION)){
     session_start();
@@ -6,7 +12,7 @@ if(!isset($_SESSION)){
 
 <html>
 <head>
-    <?php include("includes/head.html"); ?>
+    <?php include "includes/head.html"; ?>
 </head>
 <body>
 
@@ -17,13 +23,12 @@ if(!isset($_SESSION)){
         </div>
     </div>
     <div class="row">
-        <div id="content" class="col-md-9 border">
-            <?php include 'anuncis.php';?>
-        </div>
+        <div id="content" class="col-md-9 border">&nbsp;</div>
         <div id="menuColumn" class="col-md-3 border">
             <?php include 'menu.php';?>
         </div>
     </div>
 </div>
+
 </body>
 </html>

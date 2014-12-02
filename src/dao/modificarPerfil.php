@@ -11,7 +11,7 @@ if(!isset($_SESSION)){
     session_start();
 }
 
-include "common.php";
+include "../common.php";
 
 if(Common::is_ajax()) {
     if(isset($_POST['userID']) && !empty($_POST['userID']) && isset($_POST['nom']) && !empty($_POST['nom'])) {

@@ -34,3 +34,23 @@ function showSuccess($alert, msg) {
     setupAlert($alert, "alert-success fade-in", msg);
     setTimeout(fadeAlert($alert), 3000);
 }
+
+// Custom jQuery functions
+(function($) {
+    $.fn.hideBootstrap = function() {
+        if (!this.hasClass("hidden")) {
+            this.addClass("hidden");
+        }
+    };
+    $.fn.showBootstrap = function() {
+        if (this.hasClass("hidden")) {
+            this.removeClass("hidden");
+        }
+    };
+    $.fn.isEmpty = function() {
+        return this.val().length == 0;
+    };
+    $.fn.isVisible = function() {
+        return !this.hasClass('hidden');
+    };
+})(jQuery);
