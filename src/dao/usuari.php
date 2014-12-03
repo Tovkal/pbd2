@@ -15,27 +15,27 @@ include "../common.php";
 if (Common::is_ajax()) {
     if (isset($_POST['userID']) && !empty($_POST['userID'])) {
         if (isset($_POST['action']) && !empty($_POST['action'])) {
-            if ($_POST['action'] == "login") {
-                if (isset($_POST['password']) && !empty($_POST['password'])) {
+            if (isset($_POST['password']) && !empty($_POST['password'])) {
+                if ($_POST['action'] == "login") {
                     echo json_encode(lookupUser());
+                } else if (isset($_POST['nom']) && !empty($_POST['nom'])) {
+                    if ($_POST['action'] == "signup") {
+                        echo json_encode(createUser());
+                    } else if ($_POST['action'] == "update") {
+                        echo json_encode(updateUser());
+                    }
                 } else {
-                    $result = array("error" => true, "error_msg" => "No s'ha inserit una contrasenya");
+                    $result = array("error" => true, "error_msg" => "No s'ha indicat una nom i cognom");
                     echo json_encode($result);
                 }
-
-
-            } else if (isset($_POST['nom']) && !empty($_POST['nom'])) {
-                if ($_POST['action'] == "signup") {
-                    echo json_encode(createUser());
-                } else if ($_POST['action'] == "update") {
-                    echo json_encode(updateUser());
-                } else {
-                    $result = array("error" => true, "error_msg" => "No s'ha indicat una acció correcta");
-                    echo json_encode($result);
-                }
+            } else {
+                $result = array("error" => true, "error_msg" => "No s'ha inserit una contrasenya");
+                echo json_encode($result);
             }
+        } else {
+            $result = array("error" => true, "error_msg" => "No s'ha indicat una acció correcta");
+            echo json_encode($result);
         }
-
     } else {
         $result = array("error" => true, "error_msg" => "No s'ha indicat una id d'usuari");
         echo json_encode($result);
@@ -62,6 +62,7 @@ function lookupUser() {
         );
         $_SESSION['id'] = $result['id'];
         $_SESSION['userID'] = $result['userID'];
+        $_SESSION['password'] = $_POST['password'];
         $_SESSION['nom'] = $result['nom'];
         $_SESSION['id_privilegi'] = $result['id_privilegi'];
 
@@ -77,9 +78,9 @@ function lookupUser() {
 function createUser() {
     // Fetch user's data if it's already registered
     $db = Common::initPDOConnection("BDII_08");
-    $select = $db->prepare("INSERT INTO Usuari (userID, nom, id_privilegi) VALUES (:userID, :nom, 2)"); //Anuncians = nivell 2
+    $select = $db->prepare("INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES (:userID, :password, :nom, 2)"); //Anuncians = nivell 2
 
-    $wasSuccessful = $select->execute(array('userID' => $_POST['userID'], 'nom' => $_POST['nom']));
+    $wasSuccessful = $select->execute(array('userID' => $_POST['userID'], 'password' => $_POST['password'], 'nom' => $_POST['nom']));
     if ($wasSuccessful) {
         $response = array("error" => false,
             "user" => array(
@@ -90,6 +91,7 @@ function createUser() {
         );
         $_SESSION['id'] = $db->lastInsertId("Usuari");
         $_SESSION['userID'] = $_POST['userID'];
+        $_SESSION['password'] = $_POST['password'];
         $_SESSION['nom'] = $_POST['nom'];
         $_SESSION['id_privilegi'] = 2;
 
@@ -105,9 +107,27 @@ function createUser() {
 function updateUser() {
     // Fetch user's data if it's already registered
     $db = Common::initPDOConnection("BDII_08");
-    $select = $db->prepare("UPDATE Usuari SET userID = :userID, nom = :nom WHERE id = :id");
+    $query = "UPDATE Usuari SET";
+    $parameters = array();
+    $wasSuccessful = null;
+    if (isset($_POST['userID']) && !empty($_POST['userID'])) {
+        $query = $query . " userID = :userID, ";
+        $parameters['userID'] = $_POST['userID'];
+    }
+    if (isset($_POST['password']) && !empty($_POST['password'])) {
+        $query = $query . " password = :password, ";
+        $parameters['password'] = $_POST['password'];
+    }
+    if (isset($_POST['nom']) && !empty($_POST['nom'])) {
+        $query = $query . " nom = :nom";
+        $parameters['nom'] = $_POST['nom'];
+    }
 
-    $wasSuccessful = $select->execute(array('userID' => $_POST['userID'], 'nom' => $_POST['nom'], 'id' => $_SESSION['id']));
+    $parameters['id'] = $_SESSION['id'];
+
+    $query = $db->prepare($query . " WHERE id = :id");
+
+    $wasSuccessful = $query->execute($parameters);
     if ($wasSuccessful) {
         $response = array("error" => false,
             "user" => array(
@@ -116,13 +136,15 @@ function updateUser() {
             )
         );
         $_SESSION['userID'] = $_POST['userID'];
+        $_SESSION['password'] = $_POST['password'];
         $_SESSION['nom'] = $_POST['nom'];
+        $_SESSION['updateOK'] = true;
 
         // Close DB connection
         $db = null;
 
         return $response;
     } else {
-        return array("error" => true, "error_msg" => "No s'ha pogut actualitzar l'usuari", "db_error_msg" => ($select->errorInfo()));
+        return array("error" => true, "error_msg" => "No s'ha pogut actualitzar l'usuari", "db_error_msg" => ($query->errorInfo()));
     }
 }

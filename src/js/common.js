@@ -11,12 +11,24 @@ function showInfo($alert, msg) {
     setupAlert($alert, "alert-info fade-in", msg);
 }
 
-function showSuccess($alert, msg) {
-    setupAlert($alert, "alert-success fade-in", msg);
-    $alert.delay(3000).fadeOut("slow", function() {
+function fadeAlert($alert, delay) {
+    $alert.delay(delay).fadeOut("slow", function() {
         $alert.attr("class", "hidden");
         $alert.removeAttr("style");
     });
+}
+
+function fadeAlertWithDelay($alert) {
+    fadeAlert($alert, 3000);
+}
+
+function fadeAlertWithoutDelay($alert) {
+    fadeAlert($alert, 0);
+}
+
+function showSuccess($alert, msg) {
+    setupAlert($alert, "alert-success fade-in", msg);
+    fadeAlertWithDelay($alert);
 }
 
 // Custom jQuery functions

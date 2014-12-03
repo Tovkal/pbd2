@@ -18,7 +18,7 @@ if(!isset($_SESSION)){
     </div>
     <div class="row">
         <div id="content" class="col-md-9 border">
-            <?php include 'anuncis.php';?>
+            <?php include 'llista_anuncis.php';?>
         </div>
         <div id="menuColumn" class="col-md-3 border">
             <?php include 'menu.php';?>

@@ -45,31 +45,52 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
     </div>
     <div class="row">
         <div id="content" class="col-md-9 border">
-            <div class="row row-top-margin">
+            <div class="row row-top-margin" style="padding-right: 10px; padding-left: 10px;">
                 <div class="col-md-12">
                     <div id="mainAlert" class="hidden" role="alert">Alert</div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="padding-right: 10px; padding-left: 10px;">
                 <div class="col-md-12">
-                    <form id="profileForm" name="profileForm" class="form-inline" role="form">
+                    <p style="padding-bottom: 10px;">A continuació es mostren els valors actuals del teu compte. Si vols modificar-ne un, insereix el text a la casella adequada i pulsa modificar.</p>
+                    <form id="profileForm" name="profileForm" role="form">
                         <input id="action" name="action" type="hidden" value="update" />
-                        <div class="form-group form-group-right-padding">
-                            <label for="userID">Nom d'usuari</label>
-                            <input type="text" id="userID" name="userID" class="form-control" value="<?php echo $_SESSION['userID'] ?>">
-                        </div>
-                        <div class="form-group form-group-right-padding">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="userID">ID d'usuari</label>
+                                    <input type="text" id="userID" name="userID" class="form-control" value="<?php echo $_SESSION['userID'] ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
 
-                            <label for="nom">Nom i Cognoms </label>
-                            <input type="text" id="nom" name="nom" class="form-control" value="<?php echo $_SESSION['nom'] ?>">
+                                    <label for="nom">Nom i Cognoms </label>
+                                    <input type="text" id="nom" name="nom" class="form-control" value="<?php echo $_SESSION['nom'] ?>">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tipusUsuari">Tipus d'usuari</label>
-                            <p class="form-control-static" id="tipusUsuari"><?php echo $_SESSION['descripcio_privilegi'] ?></p>
+                        <div class="row row-top-margin">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="password">Contrasenya</label>
+                                    <input type="text" id="password" name="password" class="form-control" value="<?php echo $_SESSION['password'] ?>" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tipusUsuari">Tipus d'usuari</label>
+                                    <p class="form-control-static" id="tipusUsuari"><?php echo $_SESSION['descripcio_privilegi'] ?></p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="pull-right row-top-margin">
-                            <button type="button" class="btn btn-primary" onclick="processUpdate()">Modificar</button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right row-top-margin" style="padding-bottom: 10px;">
+                                    <button type="button" class="btn btn-success" onclick="processUpdate()">Modificar</button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -82,9 +103,16 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 </div>
 
 <script type="application/javascript">
+    var $mainAlert = $("#mainAlert");
+
+    $(document).ready(function() {
+       <?php if(isset($_SESSION['updateOK']) && !empty($_SESSION['updateOK'])) { ?>
+            showSuccess($mainAlert, "S'han actualitzat correctament les dades.");
+       <?php unset($_SESSION['updateOK']); } ?>
+    });
+
     function processUpdate() {
         var data = $("#profileForm").serialize();
-        var $mainAlert = $("#mainAlert");
         $.ajax({
             type: "POST",
             datatype: "json",

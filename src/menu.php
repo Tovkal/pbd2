@@ -21,7 +21,7 @@ if(!isset($_SESSION)){
         <form id="userForm" name="userForm">
             <input id="action" name="action" type="hidden" value="" />
             <div class="form-group row-centered">
-                <label for="userID">Nom d'usuari</label>
+                <label for="userID">ID d'usuari</label>
                 <input type="text" id="userID" name="userID" class="form-control" />
                 <label for="password">Contrasenya</label>
                 <input type="text" id="password" name="password" class="form-control" />
@@ -141,12 +141,12 @@ if(!isset($_SESSION)){
         if ($userID.isEmpty()) {
             showError($sideAlert, "Escriu un nom d'usuari");
             $userID.on("keypress", function() {
-                fadeAlert($sideAlert);
+                fadeAlertWithoutDelay($sideAlert);
             });
         } else if ($password.isEmpty()) {
             showError($sideAlert, "Escriu una contrasenya");
             $password.on("keypress", function() {
-                fadeAlert($sideAlert);
+                fadeAlertWithoutDelay($sideAlert);
             });
         }
     }
