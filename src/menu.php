@@ -67,8 +67,8 @@ if(!isset($_SESSION)){
     <hr>
     <div class="col-md-12">
         <p class="lead">Administració</p>
-        <button type="button" class="btn btn-primary">Administrar seccions</button>
-        <button type="button" class="btn btn-primary">Administrar usuaris</button>
+        <button type="button" class="btn btn-primary">Seccions</button>
+        <button type="button" class="btn btn-primary">Usuaris</button>
     </div>
 </div>
 

@@ -91,7 +91,30 @@ if(!isset($_SESSION)){
                             });
                         </script>
                     </div>
+            </form>
+
                     <div class="col-md-8">
+                        <!-- Standar Form -->
+                        <form action="" method="post" enctype="multipart/form-data" id="js-upload-form">
+                            <label>Selecciona una foto del teu ordenador</label>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input type="file" name="files[]" id="js-upload-files" multiple>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">Pujar foto</button>
+                            </div>
+                        </form>
+
+                        <!-- Drop Zone -->
+                        <label>O arrosega una foto al recuardre</label>
+                        <div class="upload-drop-zone" id="drop-zone">
+                            Arrosega i amolla la foto aquí
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress">
+                            <div id="photoProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                        </div>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-12"><label for="foto">Foto</label></div>
@@ -106,13 +129,13 @@ if(!isset($_SESSION)){
                             </div>
                         </div>
                     </div>
+                    <script type="text/javascript" src="js/uploadPhoto.js"></script>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <button class="btn btn-success pull-right">Crear</button>
                     </div>
                 </div>
-            </form>
         </div>
         <div id="menuColumn" class="col-md-3 border">
             <?php include 'menu.php';?>
