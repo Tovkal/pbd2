@@ -10,4 +10,4 @@ if(!isset($_SESSION)){
     session_start();
 }
 
-echo "Anuncis per aqui";
+echo "Llista d'anuncis per aqui";

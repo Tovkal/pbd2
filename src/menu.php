@@ -12,45 +12,61 @@ if(!isset($_SESSION)){
 
 <div class="row row-top-margin">
     <div class="col-md-12">
-        <div id="sideAlert" class="hidden" role="alert">Alert</div>
+        <div id="sideAlert" class="hidden" role="alert" style="margin-bottom: 0;">Alert</div>
     </div>
 </div>
 
-<div class="row">
+<div id="userSection" class="row">
     <div class="col-md-12">
         <form id="userForm" name="userForm">
             <input id="action" name="action" type="hidden" value="" />
             <div class="form-group row-centered">
-                <label for="userID">ID d'usuari</label>
-                <input type="text" id="userID" name="userID" class="form-control" />
-                <label for="password">Contrasenya</label>
-                <input type="text" id="password" name="password" class="form-control" />
-                <p id="userInfo" class="hidden"></p>
-                <div id="expandedSignup" class="row-top-margin hidden">
-                    <label for="nom">Nom i cognoms</label>
-                    <input type="text" id="nom" name="nom" class="form-control" />
+                <div class="row row-top-margin hideOnLogin">
+                    <div class="col-md-12">
+                        <label for="userID">ID d'usuari</label>
+                        <input type="text" id="userID" name="userID" class="form-control" />
+                    </div>
+                </div>
+                <div class="row row-top-margin hideOnLogin">
+                    <div class="col-md-12">
+                        <label for="password">Contrasenya</label>
+                        <input type="text" id="password" name="password" class="form-control" />
+                    </div>
+                </div>
+                <div class="row row-top-margin hideLoggedOut hidden">
+                    <div class="col-md-12">
+                        <p id="userInfo"></p>
+                    </div>
+                </div>
+                <div id="expandedSignup" class="row hidden">
+                    <div class="col-md-12">
+                        <label for="nom">Nom i cognoms</label>
+                        <input type="text" id="nom" name="nom" class="form-control" />
+                    </div>
                 </div>
             </div>
 
             <div class="row row-centered">
-                <button id="loginButton" type="button" class="btn btn-primary" onclick="doLogin();">Accedir</button>
-                <button id="signupButton" type="button" class="btn btn-primary" onclick="doSignup();">Donar'se d'alta</button>
-                <button id="modifyProfileButton" type="button" class="btn btn-primary hidden" onclick="modifyProfile();">Modificar perfil</button>
-                <button id="logoutButton" type="button" class="btn btn-primary hidden" onclick="doLogout();">Logout</button>
+                <button id="loginButton" type="button" class="btn btn-primary hideOnLogin" onclick="doLogin();">Accedir</button>
+                <button id="signupButton" type="button" class="btn btn-primary hideOnLogin" onclick="doSignup();">Donar'se d'alta</button>
+                <button id="modifyProfileButton" type="button" class="btn btn-primary hideLoggedOut hidden" onclick="modifyProfile();">Modificar perfil</button>
+                <button id="logoutButton" type="button" class="btn btn-primary hideLoggedOut hidden" onclick="doLogout();">Logout</button>
             </div>
         </form>
     </div>
 </div>
-
-<div class="row row-centered">
+<div id="sellerSection" class="row row-centered hideLoggedOut hidden">
+    <hr>
     <div class="col-md-12">
+        <p class="lead">Anuncis</p>
         <button id="nouAnunci" type="button" class="btn btn-primary">Publicar anunci</button>
         <button id="veureAnuncis" type="button" class="btn btn-primary">Veure anuncis</button>
     </div>
 </div>
-
-<div id="adminPanel" class="row row-centered row-top-margin">
+<div id="adminSection" class="row row-centered row-top-margin hideLoggedOut hidden">
+    <hr>
     <div class="col-md-12">
+        <p class="lead">Administració</p>
         <button type="button" class="btn btn-primary">Administrar seccions</button>
         <button type="button" class="btn btn-primary">Veure usuaris</button>
     </div>
@@ -84,15 +100,19 @@ if(!isset($_SESSION)){
 
     function showLoggedIn() {
         <?php if(isset($_SESSION['userID']) && !empty($_SESSION['userID'])) { ?>
-        $loginButton.hideBootstrap();
-        $signupButton.hideBootstrap();
-        $modifyProfileButton.showBootstrap();
-        $logoutButton.showBootstrap();
-        $userID.hideBootstrap();
-        $password.hideBootstrap();
-        $userInfo.showBootstrap();
+        didLogin();
         $userInfo.text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
         <?php } ?>
+    }
+
+    function didLogin() {
+        $(".hideOnLogin").hideBootstrap();
+        $(".hideLoggedOut").showBootstrap();
+    }
+
+    function didLogout() {
+        $(".hideOnLogin").showBootstrap();
+        $(".hideLoggedOut").hideBootstrap();
     }
 
     function doLogin() {
@@ -116,13 +136,7 @@ if(!isset($_SESSION)){
                     var user = result['user'];
 
                     showSuccess($sideAlert, "Estas conectat, benvingut");
-                    $loginButton.hideBootstrap();
-                    $signupButton.hideBootstrap();
-                    $modifyProfileButton.showBootstrap();
-                    $logoutButton.showBootstrap();
-                    $userID.hideBootstrap();
-                    $password.hideBootstrap();
-                    $userInfo.showBootstrap();
+                    didLogin();
                     $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
             },
@@ -178,13 +192,7 @@ if(!isset($_SESSION)){
                 } else {
                     var user = result['user'];
 
-                    showSuccess($sideAlert, "Estas conectat, benvingut");
-                    $loginButton.hideBootstrap();
-                    $signupButton.hideBootstrap();
-                    $logoutButton.showBootstrap();
-                    $userID.hideBootstrap();
-                    $password.hideBootstrap();
-                    $userInfo.showBootstrap();
+                    didLogout();
                     $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
             },
