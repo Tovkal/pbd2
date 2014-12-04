@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS Usuari (
 CREATE TABLE IF NOT EXISTS Anunci (
 	id INT AUTO_INCREMENT,
 	titol_curt VARCHAR(30),
-	text_anunci VARCHAR(1000),
+	text_anunci VARCHAR(150),
 	data_publicacio DATETIME,
 	data_web DATETIME,
 	data_no_web DATETIME,

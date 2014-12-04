@@ -59,7 +59,7 @@ if(!isset($_SESSION)){
     <hr>
     <div class="col-md-12">
         <p class="lead">Anuncis</p>
-        <button id="nouAnunci" type="button" class="btn btn-primary">Publicar anunci</button>
+        <button id="nouAnunci" type="button" class="btn btn-primary" onclick="crearAnunci()">Publicar anunci</button>
         <button id="veureAnuncis" type="button" class="btn btn-primary">Veure anuncis</button>
     </div>
 </div>
@@ -68,7 +68,7 @@ if(!isset($_SESSION)){
     <div class="col-md-12">
         <p class="lead">Administració</p>
         <button type="button" class="btn btn-primary">Administrar seccions</button>
-        <button type="button" class="btn btn-primary">Veure usuaris</button>
+        <button type="button" class="btn btn-primary">Administrar usuaris</button>
     </div>
 </div>
 
@@ -216,8 +216,14 @@ if(!isset($_SESSION)){
         });
     }
 
+
+    // Redirections
     function modifyProfile() {
-        window.location.href="perfil.php";
+        window.location.href = "perfil.php";
+    }
+
+    function crearAnunci() {
+        window.location.href = "anunci.php?a=crear";
     }
 
     function doLogout() {
