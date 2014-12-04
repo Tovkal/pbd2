@@ -63,7 +63,7 @@ if(!isset($_SESSION)){
         <button id="veureAnuncis" type="button" class="btn btn-primary">Veure anuncis</button>
     </div>
 </div>
-<div id="adminSection" class="row row-centered row-top-margin hideLoggedOut hidden">
+<div id="adminSection" class="row row-centered row-top-margin hidden">
     <hr>
     <div class="col-md-12">
         <p class="lead">Administració</p>
@@ -99,10 +99,12 @@ if(!isset($_SESSION)){
     });
 
     function showLoggedIn() {
-        <?php if(isset($_SESSION['userID']) && !empty($_SESSION['userID'])) { ?>
-        didLogin();
+        <?php if (isset($_SESSION['userID']) && !empty($_SESSION['userID'])) { ?>
+            didLogin();
         $userInfo.text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
-        <?php } ?>
+        <?php if (isset($_SESSION['id_privilegi']) && !empty($_SESSION['id_privilegi'])) { ?>
+            adminLogin();
+        <?php } } ?>
     }
 
     function didLogin() {
@@ -113,6 +115,14 @@ if(!isset($_SESSION)){
     function didLogout() {
         $(".hideOnLogin").showBootstrap();
         $(".hideLoggedOut").hideBootstrap();
+    }
+
+    function adminLogin() {
+        $("#adminSection").showBootstrap();
+    }
+
+    function adminLogout() {
+        $("#adminSection").hideBootstrap();
     }
 
     function doLogin() {
@@ -137,6 +147,9 @@ if(!isset($_SESSION)){
 
                     showSuccess($sideAlert, "Estas conectat, benvingut");
                     didLogin();
+                    if (user['id_privilegi'] == 1) {
+                        adminLogin();
+                    }
                     $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
             },
@@ -215,6 +228,8 @@ if(!isset($_SESSION)){
         $userID.showBootstrap();
         $password.showBootstrap();
         $userInfo.hideBootstrap();
+
+        adminLogout();
 
 
         if ($loginButton.hasClass('disabled')) {
