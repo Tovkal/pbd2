@@ -20,7 +20,13 @@ if(!isset($_SESSION)){
     <script type="text/javascript" src="js/bootstrap-formhelpers-phone.js"></script>
 </head>
 <body>
-
+<script type="text/javascript">
+    function reuploadPhoto() {
+        $("#reuploadPhotoBtn").hideBootstrap();
+        $("#photoUpload").showBootstrap();
+        $("#photoProgressBar").style.width = '0%';
+    }
+</script>
 <div class="wrapper container-fluid">
     <div class="row">
         <div class="col-md-12 border" >
@@ -29,7 +35,8 @@ if(!isset($_SESSION)){
     </div>
     <div class="row">
         <div id="content" class="col-md-9 border">
-            <form class="form" role="form">
+            <form id="anunciForm" class="form" role="form">
+                <input id="photoName" name="photoName" type="hidden" />
                 <div class="row">
                     <div class="col-md-12">
                         <h2>Crear anunci</h2>
@@ -94,26 +101,29 @@ if(!isset($_SESSION)){
             </form>
 
                     <div class="col-md-8">
-                        <!-- Standar Form -->
-                        <form action="" method="post" enctype="multipart/form-data" id="js-upload-form">
-                            <label>Selecciona una foto del teu ordenador</label>
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <input type="file" name="files[]" id="js-upload-files" multiple>
+                        <div id="photoAlert" class="hidden" role="alert"></div>
+                        <div id="photoUpload">
+                            <!-- Standar Form -->
+                            <form action="" method="post" enctype="multipart/form-data" id="js-upload-form">
+                                <label>Selecciona una foto del teu ordenador</label>
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <input type="file" name="files[]" id="js-upload-files" multiple>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">Pujar foto</button>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">Pujar foto</button>
+                            </form>
+
+                            <!-- Drop Zone -->
+                            <label>O arrosega una foto al recuardre</label>
+                            <div class="upload-drop-zone" id="drop-zone">
+                                Arrosega i amolla la foto aquí
                             </div>
-                        </form>
 
-                        <!-- Drop Zone -->
-                        <label>O arrosega una foto al recuardre</label>
-                        <div class="upload-drop-zone" id="drop-zone">
-                            Arrosega i amolla la foto aquí
-                        </div>
-
-                        <!-- Progress Bar -->
-                        <div class="progress">
-                            <div id="photoProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            <!-- Progress Bar -->
+                            <div class="progress">
+                                <div id="photoProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="row">
@@ -121,10 +131,10 @@ if(!isset($_SESSION)){
                             </div>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <div style="height: 250px; border: 1px dashed #000000;"></div>
+                                    <div id="photo" style="height: 250px; border: 1px dashed #000000;"></div>
                                 </div>
                                 <div class="col-md-4">
-                                    <span class="btn btn-primary btn-file">Pujar<input type="file"></span>
+                                    <button id="reuploadPhotoBtn" type="button" class="btn btn-primary hidden" onclick="reuploadPhoto();">Canviar foto</button>
                                 </div>
                             </div>
                         </div>

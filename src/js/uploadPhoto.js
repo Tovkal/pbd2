@@ -32,11 +32,15 @@ $(document).ready(function() {
                         data: 'Unknown error occurred: [' + request.responseText + ']'
                     };
                 }
-                console.log(resp.status + ': ' + resp.data);
 
                 if (resp.status == 'success') {
-                    //Show success alert?
-                    //TODO Hide upload form?
+                    showSuccess($("#photoAlert"), "S'ha pujat la foto correctament.", 2000);
+                    $("#photoUpload").hideBootstrap();
+                    $("#photoName").value = files[0].name;
+                    $("#photo").html("<img src='upload/" + files[0].name + "' style='display:block;margin:auto;height:100%;'>")
+                    $("#reuploadPhotoBtn").showBootstrap();
+                } else {
+                    showError($("#photoAlert"), "Ha ocorregut un error pujant la foto: " + resp['data']);
                 }
             }
         };

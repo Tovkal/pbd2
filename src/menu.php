@@ -145,7 +145,7 @@ if(!isset($_SESSION)){
                 } else {
                     var user = result['user'];
 
-                    showSuccess($sideAlert, "Estas conectat, benvingut");
+                    showSuccess($sideAlert, "Estas conectat, benvingut", 3000);
                     didLogin();
                     if (user['id_privilegi'] == 1) {
                         adminLogin();

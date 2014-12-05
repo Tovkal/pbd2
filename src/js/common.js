@@ -18,17 +18,17 @@ function fadeAlert($alert, delay) {
     });
 }
 
-function fadeAlertWithDelay($alert) {
-    fadeAlert($alert, 3000);
+function fadeAlertWithDelay($alert, delay) {
+    fadeAlert($alert, delay);
 }
 
 function fadeAlertWithoutDelay($alert) {
     fadeAlert($alert, 0);
 }
 
-function showSuccess($alert, msg) {
+function showSuccess($alert, msg, delay) {
     setupAlert($alert, "alert-success fade-in", msg);
-    fadeAlertWithDelay($alert);
+    fadeAlertWithDelay($alert, delay);
 }
 
 // Custom jQuery functions

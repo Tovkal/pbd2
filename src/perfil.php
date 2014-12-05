@@ -107,7 +107,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 
     $(document).ready(function() {
        <?php if(isset($_SESSION['updateOK']) && !empty($_SESSION['updateOK'])) { ?>
-            showSuccess($mainAlert, "S'han actualitzat correctament les dades.");
+            showSuccess($mainAlert, "S'han actualitzat correctament les dades.", 3000);
        <?php unset($_SESSION['updateOK']); } ?>
     });
 

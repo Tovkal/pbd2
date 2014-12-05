@@ -34,7 +34,7 @@ if($_FILES['SelectedFile']['type'] == 'image/png' || $_FILES['SelectedFile']['ty
 
     // Check if the file exists
     if(file_exists('../upload/' . $_FILES['SelectedFile']['name'])){
-        outputJSON('File with that name already exists.');
+        outputJSON('File with that name already exists.', 'success');
     }
 
     // Upload file
