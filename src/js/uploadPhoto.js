@@ -39,6 +39,7 @@ $(document).ready(function() {
                     $("#photoName").value = files[0].name;
                     $("#photo").html("<img src='upload/" + files[0].name + "' style='display:block;margin:auto;height:100%;'>")
                     $("#reuploadPhotoBtn").showBootstrap();
+                    $("#photoPreview").showBootstrap();
                 } else {
                     showError($("#photoAlert"), "Ha ocorregut un error pujant la foto: " + resp['data']);
                 }
