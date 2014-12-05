@@ -18,12 +18,9 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 
 <html>
 <head>
+    <title>Crear anunci</title>
     <?php include "includes/head.html"; ?>
-    <script type="text/javascript" src="js/moment.js"></script>
-    <script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
-    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
-    <script type="text/javascript" src="js/bootstrap-formhelpers-phone.js"></script>
+    <?php include "includes/datepicker.html"; ?>
 </head>
 <body>
 <script type="text/javascript">
@@ -41,48 +38,50 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
     </div>
     <div class="row">
         <div id="content" class="col-md-9 border">
-            <form id="anunciForm" class="form" role="form">
+            <form id="anunciForm" class="form" role="form" style="margin-bottom: 0;">
                 <input id="photoName" name="photoName" type="hidden" />
+                <input id="action" name="action" type="hidden" />
                 <div class="row">
                     <div class="col-md-12">
                         <h2>Crear anunci</h2>
                         <hr>
+                        <div id="mainAlert" class="hidden" role="alert"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="titolCurt">Titol curt</label>
-                            <input type="text" class="form-control" id="titolCurt" name="titolCurt" maxlength="30">
+                            <label for="titolCurt" class="control-label">Titol curt*</label>
+                            <input type="text" class="form-control obligatori" id="titolCurt" name="titolCurt" maxlength="30" />
                         </div>
                         <div class="form-group">
-                            <label for="telefon">Telèfon</label>
-                            <input type="text" class="form-control bfh-phone" id="telefon" name="telefon"  data-format="ddd ddd ddd">
+                            <label for="telefon">Telèfon*</label>
+                            <input type="text" class="form-control bfh-phone obligatori" id="telefon" name="telefon" maxlength="9" placeholder="123456789" />
 
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
                             <label for="descripcio">Descripció</label>
-                            <textarea id="descripcio" name="titolCurt" class="form-control" maxlength="150" rows="5"></textarea>
+                            <textarea id="descripcio" name="descripcio " class="form-control" data-bv-excluded maxlength="150" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="dataWeb">Data de publicació</label>
+                            <label for="dataWeb">Data de publicació*</label>
                             <div class='input-group date' id='dataWeb'>
-                                <input type='text' id="dataWeb" name="dataWeb" class="form-control" data-date-format="DD/MM/YYYY"/>
+                                <input type='text' id="dataWeb" name="dataWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="dataNoWeb">Data de despublicació</label>
+                            <label for="dataNoWeb">Data de despublicació*</label>
                             <div class='input-group date' id='dataNoWeb'>
-                                <input type='text' id="dataNoWeb" name="dataNoWeb" class="form-control" data-date-format="DD/MM/YYYY"/>
+                                <input type='text' id="dataNoWeb" name="dataNoWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
@@ -116,7 +115,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     </label>
                     <div class="form-inline">
                         <div class="form-group">
-                            <input type="file" name="files[]" id="js-upload-files" multiple>
+                            <input type="file" name="photoFile" id="js-upload-files" />
                         </div>
                         <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">
                             Pujar foto
@@ -134,7 +133,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 
                     <!-- Progress Bar -->
                     <div class="progress">
-                        <div id="photoProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                        <div id="photoProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
                         </div>
                     </div>
                 </div>
@@ -161,12 +160,10 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
             </div>
             <script type="text/javascript" src="js/uploadPhoto.js"></script>
         </div>
-        <div class="row">
+        <div class="row" style="padding-bottom: 20px;">
             <hr>
             <div class="col-md-12">
-                <button class="btn btn-success pull-right">
-                    Crear
-                </button>
+                <button class="btn btn-success pull-right" onclick="submitAnunci();">Crear</button>
             </div>
         </div>
         </div>
@@ -175,6 +172,49 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var $form = $('#anunciForm');
 
+    $(document).ready(function() {
+        $("#action").val(getUrlParameter("a"));
+    });
+
+    function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++)
+        {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam)
+            {
+                return sParameterName[1];
+            }
+        }
+    }
+
+    function submitAnunci() {
+        var data = $("#anunciForm").serialize();
+        $.ajax({
+            type: "POST",
+            datatype: "json",
+            url: "dao/anunci.php",
+            data: data,
+            success: function(returned_data) {alert(returned_data);
+                var result = JSON.parse(returned_data);
+
+                if (result['error'] == true) {
+                    showError($("#mainAlert"), result['error_msg']);
+                } else {
+                    location.reload();
+                }
+            },
+            error: function() {
+                //show alert error
+                //TODO show error
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

@@ -37,7 +37,7 @@ $(document).ready(function() {
                     showSuccess($("#photoAlert"), "S'ha pujat la foto correctament.", 2000);
                     $("#photoUpload").hideBootstrap();
                     $("#photoName").value = files[0].name;
-                    $("#photo").html("<img src='upload/" + files[0].name + "' style='display:block;margin:auto;height:100%;'>")
+                    $("#photo").html("<img src='upload/" + files[0].name + "' style='display:block;margin:auto;height:100%; width:100%;'>")
                     $("#reuploadPhotoBtn").showBootstrap();
                     $("#photoPreview").showBootstrap();
                 } else {
