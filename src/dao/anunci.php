@@ -38,7 +38,12 @@ function validateInputCrear() {
         if (isset($_POST['telefon']) && !empty($_POST['telefon'])) {
             if (isset($_POST['dataWeb']) && !empty($_POST['dataWeb'])) {
                 if (isset($_POST['dataNoWeb']) && !empty($_POST['dataNoWeb'])) {
-                    echo json_encode(crearAnunci());
+                    if (isset($_POST['seccio']) && !empty($_POST['seccio']) && $_POST['seccio'] != -1) {
+                        echo json_encode(crearAnunci());
+                    } else {
+                        $result = array("error" => true, "error_msg" => "Ha de seleccionar una secció per l'anunci");
+                        echo json_encode($result);
+                    }
                 } else {
                     $result = array("error" => true, "error_msg" => "La data de despublicació no pot estar buida");
                     echo json_encode($result);
@@ -72,7 +77,7 @@ function crearAnunci() {
         'data_web' => parseDateToDBFormat($_POST['dataWeb']),
         'data_no_web' => parseDateToDBFormat($_POST['dataNoWeb']),
         'id_usuari' => $_SESSION['id_usuari'],
-        'codi_seccio' => "1"//$_POST['codi_seccio']
+        'codi_seccio' => $_POST['seccio']
     );
 
     if (isset($_POST['textAnunci']) && !empty($_POST['textAnunci'])) {

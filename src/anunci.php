@@ -50,6 +50,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 </div>
                 <div class="row">
                     <div class="col-md-4">
+                        <span class="help-block">Camps obligatoris.</span>
                         <div class="form-group">
                             <label for="titolCurt" class="control-label">Titol curt*</label>
                             <input type="text" class="form-control obligatori" id="titolCurt" name="titolCurt" maxlength="30" />
@@ -61,6 +62,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                         </div>
                     </div>
                     <div class="col-md-8">
+                        <span class="help-block">Camps opcionals.</span>
                         <div class="form-group">
                             <label for="textAnunci">Descripció</label>
                             <textarea id="textAnunci" name="textAnunci" class="form-control" data-bv-excluded maxlength="150" rows="5"></textarea>
@@ -102,6 +104,12 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                                 });
                             });
                         </script>
+                        <div class="form-group">
+                            <label for="seccio">Secció*</label>
+                            <select id="seccio" name="seccio" class="form-control">
+                                <option value="-1">Selecciona una secció</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-8">
                         <div id="photoAlert" class="hidden" role="alert">
@@ -152,12 +160,12 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     <script type="text/javascript" src="js/uploadPhoto.js"></script>
                 </div>
             </form>
-        <div class="row" style="padding-bottom: 20px;">
-            <hr>
-            <div class="col-md-12">
-                <button class="btn btn-success pull-right" onclick="submitAnunci();">Crear</button>
+            <div class="row" style="padding-bottom: 20px;">
+                <hr>
+                <div class="col-md-12">
+                    <button id="crearBtn" class="btn btn-success pull-right" onclick="submitAnunci();">Crear</button>
+                </div>
             </div>
-        </div>
         </div>
         <div id="menuColumn" class="col-md-3 border">
             <?php include 'menu.php';?>
@@ -167,9 +175,13 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 <script type="text/javascript">
     var $form = $('#anunciForm');
     var $mainAlert = $("#mainAlert");
+    var $crearBtn = $("#crearBtn");
 
     $(document).ready(function() {
-        $("#action").val(getUrlParameter("a"));
+        var action = getUrlParameter("a");
+        $("#action").val(action);
+
+        setupSeccio(action);
     });
 
     function getUrlParameter(sParam) {
@@ -185,6 +197,41 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
         }
     }
 
+    function setupSeccio(action) {
+        if (action == 'crear') {
+            $.ajax({
+                type: "POST",
+                datatype: "json",
+                url: "dao/seccio.php",
+                data: "action=" + action,
+                success: function(returned_data) {
+                    var result;
+                    try {
+                        result = JSON.parse(returned_data);
+                    } catch (err) {
+                        showError($mainAlert, "La resposta del selector de seccions no es correcta");
+                        $mainAlert.html(returned_data);
+                        alert(returned_data);
+                    }
+
+                    if (result) {
+                        if (result['error'] == true) {
+                            showError($mainAlert, result['error_msg']);
+                            $crearBtn.disable();
+                        } else {
+                            $.each(result['opcions'], function (key, value) {
+                                $('#seccio')
+                                    .append($("<option></option>")
+                                        .attr("value", key)
+                                        .text(value));
+                            });
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     function submitAnunci() {
         var data = $("#anunciForm").serialize();
         $.ajax({
@@ -197,7 +244,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 try {
                     result = JSON.parse(returned_data);
                 } catch (err) {
-                    showError($mainAlert, "Error");
+                    showError($mainAlert, "La resposta a la creació de l'anunci no es correcta.");
                     $mainAlert.html(returned_data);
                 }
 
