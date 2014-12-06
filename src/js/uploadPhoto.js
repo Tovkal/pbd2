@@ -8,7 +8,6 @@ $(document).ready(function() {
     // ======================
 
     var dropZone = document.getElementById('drop-zone');
-    var uploadForm = document.getElementById('js-upload-form');
     var progress = document.getElementById('photoProgressBar');
 
     var startUpload = function(files) {
@@ -36,7 +35,7 @@ $(document).ready(function() {
                 if (resp.status == 'success') {
                     showSuccess($("#photoAlert"), "S'ha pujat la foto correctament.", 2000);
                     $("#photoUpload").hideBootstrap();
-                    $("#photoName").value = files[0].name;
+                    $("#photoName").val(files[0].name);
                     $("#photo").html("<img src='upload/" + files[0].name + "' style='display:block;margin:auto;height:100%; width:100%;'>")
                     $("#reuploadPhotoBtn").showBootstrap();
                     $("#photoPreview").showBootstrap();
@@ -54,9 +53,8 @@ $(document).ready(function() {
         request.send(data);
     };
 
-    uploadForm.addEventListener('submit', function (e) {
+    $("#js-upload-submit").click(function() {
         var uploadFiles = document.getElementById('js-upload-files').files;
-        e.preventDefault();
 
         startUpload(uploadFiles)
     });

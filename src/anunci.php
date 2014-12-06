@@ -62,8 +62,8 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label for="descripcio">Descripció</label>
-                            <textarea id="descripcio" name="descripcio " class="form-control" data-bv-excluded maxlength="150" rows="5"></textarea>
+                            <label for="textAnunci">Descripció</label>
+                            <textarea id="textAnunci" name="textAnunci" class="form-control" data-bv-excluded maxlength="150" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
@@ -103,63 +103,55 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                             });
                         </script>
                     </div>
-            </form>
-            <div class="col-md-8">
-                <div id="photoAlert" class="hidden" role="alert">
-                </div>
-                <div id="photoUpload">
-                    <!-- Standar Form -->
-                    <form action="" method="post" enctype="multipart/form-data" id="js-upload-form">
-                    <label>
-                        Selecciona una foto del teu ordenador
-                    </label>
-                    <div class="form-inline">
-                        <div class="form-group">
-                            <input type="file" name="photoFile" id="js-upload-files" />
+                    <div class="col-md-8">
+                        <div id="photoAlert" class="hidden" role="alert">
                         </div>
-                        <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">
-                            Pujar foto
-                        </button>
-                    </div>
-                    </form>
-
-                    <!-- Drop Zone -->
-                    <label>
-                        O arrosega una foto al recuardre
-                    </label>
-                    <div class="upload-drop-zone" id="drop-zone">
-                        Arrosega i amolla la foto aquí
-                    </div>
-
-                    <!-- Progress Bar -->
-                    <div class="progress">
-                        <div id="photoProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
-                        </div>
-                    </div>
-                </div>
-                <div id="photoPreview" class="form-group hidden">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="foto">
-                                Foto
+                        <div id="photoUpload">
+                            <!-- Standar Form -->
+                            <label>
+                                Selecciona una foto del teu ordenador
                             </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div id="photo" style="height: 250px; border: 1px dashed #000000;">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input type="file" name="photoFile" id="js-upload-files" />
+                                </div>
+                                <button type="button" class="btn btn-sm btn-primary" id="js-upload-submit">Pujar foto</button>
+                            </div>
+
+                            <!-- Drop Zone -->
+                            <label>
+                                O arrosega una foto al recuardre
+                            </label>
+                            <div class="upload-drop-zone" id="drop-zone">
+                                Arrosega i amolla la foto aquí
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="progress">
+                                <div id="photoProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <button id="reuploadPhotoBtn" type="button" class="btn btn-primary hidden" onclick="reuploadPhoto();">
-                                Canviar foto
-                            </button>
+                        <div id="photoPreview" class="form-group hidden">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="foto">Foto</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div id="photo" style="height: 250px; border: 1px dashed #000000;">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button id="reuploadPhotoBtn" type="button" class="btn btn-primary hidden" onclick="reuploadPhoto();">Canviar foto</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <script type="text/javascript" src="js/uploadPhoto.js"></script>
                 </div>
-            </div>
-            <script type="text/javascript" src="js/uploadPhoto.js"></script>
-        </div>
+            </form>
         <div class="row" style="padding-bottom: 20px;">
             <hr>
             <div class="col-md-12">
@@ -174,6 +166,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 </div>
 <script type="text/javascript">
     var $form = $('#anunciForm');
+    var $mainAlert = $("#mainAlert");
 
     $(document).ready(function() {
         $("#action").val(getUrlParameter("a"));
@@ -199,13 +192,19 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
             datatype: "json",
             url: "dao/anunci.php",
             data: data,
-            success: function(returned_data) {alert(returned_data);
-                var result = JSON.parse(returned_data);
+            success: function(returned_data) {
+                var result;
+                try {
+                    result = JSON.parse(returned_data);
+                } catch (err) {
+                    showError($mainAlert, "Error");
+                    $mainAlert.html(returned_data);
+                }
 
                 if (result['error'] == true) {
-                    showError($("#mainAlert"), result['error_msg']);
+                    showError($mainAlert, result['error_msg']);
                 } else {
-                    location.reload();
+                    showSuccess($mainAlert, "S'ha creat l'anunci correctament", 2500);
                 }
             },
             error: function() {

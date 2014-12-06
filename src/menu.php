@@ -139,10 +139,18 @@ if(!isset($_SESSION)){
             url: "dao/usuari.php",
             data: data,
             success: function(returned_data) {
-                var result = JSON.parse(returned_data);
+
+                var result;
+                try {
+                    result = JSON.parse(returned_data);
+                } catch (err) {
+                    $("#content").html(returned_data);
+                }
+
                 if (result['error'] == true) {
                     showError($sideAlert, result['error_msg']);
                 } else {
+
                     var user = result['user'];
 
                     showSuccess($sideAlert, "Estas conectat, benvingut", 3000);
@@ -198,7 +206,6 @@ if(!isset($_SESSION)){
             success: function(returned_data) {
                 var result = JSON.parse(returned_data);
 
-                console.log("taL?=" + result['error']);
                 if (result['error'] == true) {
                     showError($sideAlert, result['error_msg']);
                     console.log(result['db_error_msg']);

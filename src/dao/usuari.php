@@ -60,7 +60,7 @@ function lookupUser() {
                 "id_privilegi" => $result['id_privilegi']
             )
         );
-        $_SESSION['id'] = $result['id'];
+        $_SESSION['id_usuari'] = $result['id'];
         $_SESSION['userID'] = $result['userID'];
         $_SESSION['password'] = $_POST['password'];
         $_SESSION['nom'] = $result['nom'];
@@ -76,7 +76,6 @@ function lookupUser() {
 }
 
 function createUser() {
-    // Fetch user's data if it's already registered
     $db = Common::initPDOConnection("BDII_08");
     $select = $db->prepare("INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES (:userID, :password, :nom, 2)"); //Anuncians = nivell 2
 
@@ -89,7 +88,7 @@ function createUser() {
                 "id_privilegi" => 2
             )
         );
-        $_SESSION['id'] = $db->lastInsertId("Usuari");
+        $_SESSION['id_usuari'] = $db->lastInsertId("Usuari");
         $_SESSION['userID'] = $_POST['userID'];
         $_SESSION['password'] = $_POST['password'];
         $_SESSION['nom'] = $_POST['nom'];
@@ -123,7 +122,7 @@ function updateUser() {
         $parameters['nom'] = $_POST['nom'];
     }
 
-    $parameters['id'] = $_SESSION['id'];
+    $parameters['id'] = $_SESSION['id_usuari'];
 
     $query = $db->prepare($query . " WHERE id = :id");
 

@@ -21,31 +21,31 @@ CREATE TABLE IF NOT EXISTS Usuari (
 	userID VARCHAR(100) NOT NULL UNIQUE,
 	password VARCHAR(100) NOT NULL,
 	nom VARCHAR(30) NOT NULL,
-	id_privilegi INT NOT NULL,
+	id_privilegi INT NOT NULL DEFAULT 2,
 	PRIMARY KEY (id),
 	FOREIGN KEY (id_privilegi) REFERENCES Privilegi(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS Anunci (
 	id INT AUTO_INCREMENT,
-	titol_curt VARCHAR(30),
+	titol_curt VARCHAR(30) NOT NULL,
 	text_anunci VARCHAR(150),
-	data_publicacio DATETIME,
-	data_web DATETIME,
-	data_no_web DATETIME,
-	telefon INT(9),
-	imatge VARCHAR(50),
-	id_seccio INT,
+	data_publicacio TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	data_web DATETIME NOT NULL,
+	data_no_web DATETIME NOT NULL,
+	telefon INT(9) NOT NULL,
+	foto VARCHAR(50),
+	codi_seccio INT NOT NULL,
 	nombre_canvis INT DEFAULT 0,
-	id_usuari INT,
+	id_usuari INT NOT NULL,
 	PRIMARY KEY(id),
-	FOREIGN KEY (id_seccio) REFERENCES Seccio(codi_seccio),
+	FOREIGN KEY (codi_seccio) REFERENCES Seccio(codi_seccio),
 	FOREIGN KEY (id_usuari) REFERENCES Usuari(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TRIGGER augmentar_contador_canvis AFTER UPDATE ON Anunci 
 FOR EACH ROW SET @nombre_canvis = @nombre_canvis + 1;
 
-INSERT INTO Privilegi (descripcio) VALUES ('Administrador'), ('Anunciant'), ('Internauta');
+INSERT INTO Privilegi (descripcio) VALUES ('Administrador'), ('Anunciant');
 INSERT INTO Seccio (descripcio, preu, foto_generica_seccio) VALUES ('Vivendes', '1', 'casa.png'), ('Cotxes', '0.5', 'cotxo.png'), ('Ordinadors', '0.25', 'alienware.png');
-INSERT INTO Usuari (userID, nom, id_privilegi) VALUES ('admin', 'Toni Más', 1);
+INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES ('admin', '1234', 'Jaume Más', 1);
