@@ -67,12 +67,12 @@ if(!isset($_SESSION)){
     <hr>
     <div class="col-md-12">
         <p class="lead">Administració</p>
-        <button type="button" class="btn btn-primary">Seccions</button>
+        <button type="button" class="btn btn-primary" onclick="adminSeccions();">Seccions</button>
         <button type="button" class="btn btn-primary">Usuaris</button>
     </div>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
     var $userForm = $("#userForm");
     var $loginButton = $userForm.find("#loginButton");
@@ -162,7 +162,7 @@ if(!isset($_SESSION)){
                 }
             },
             error: function(err) {
-                showError($sideAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                showError($sideAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                 console.log(err);
             }
         });
@@ -217,7 +217,7 @@ if(!isset($_SESSION)){
                 }
             },
             error: function(err) {
-                showError($sideAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                showError($sideAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                 console.log(err);
             }
         });
@@ -231,6 +231,10 @@ if(!isset($_SESSION)){
 
     function crearAnunci() {
         window.location.href = "anunci.php?a=crear";
+    }
+
+    function adminSeccions() {
+        window.location.href = "admin_seccions.php";
     }
 
     function doLogout() {

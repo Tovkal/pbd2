@@ -133,7 +133,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
                 }
             },
             error: function(err) {
-                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                 console.log(err);
             }
         });

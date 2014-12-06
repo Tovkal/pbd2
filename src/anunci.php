@@ -23,7 +23,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
     <?php include "includes/datepicker.html"; ?>
 </head>
 <body>
-<script type="text/javascript">
+<script type="application/javascript">
     function reuploadPhoto() {
         $("#reuploadPhotoBtn").hideBootstrap();
         $("#photoUpload").showBootstrap();
@@ -157,7 +157,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                             </div>
                         </div>
                     </div>
-                    <script type="text/javascript" src="js/uploadPhoto.js"></script>
+                    <script type="application/javascript" src="js/uploadPhoto.js"></script>
                 </div>
             </form>
             <div class="row" style="padding-bottom: 20px;">
@@ -172,7 +172,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
         </div>
     </div>
 </div>
-<script type="text/javascript">
+<script type="application/javascript">
     var $form = $('#anunciForm');
     var $mainAlert = $("#mainAlert");
     var $crearBtn = $("#crearBtn");
@@ -203,7 +203,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 type: "POST",
                 datatype: "json",
                 url: "dao/seccio.php",
-                data: "action=" + action,
+                data: "action=" + action + "Anunci",
                 success: function(returned_data) {
                     var result;
                     try {
@@ -229,7 +229,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     }
                 },
                 error: function(err) {
-                    showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                    showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                     console.log(err);
                 }
             });
@@ -260,7 +260,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 }
             },
             error: function(err) {
-                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                 console.log(err);
             }
         });

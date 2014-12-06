@@ -4,7 +4,7 @@ USE BDII_08;
 
 CREATE TABLE IF NOT EXISTS Seccio (
 	codi_seccio INT AUTO_INCREMENT,
-	titol_curt VARCHAR(30) NOT NULL,
+	titol_curt VARCHAR(15) NOT NULL,
 	descripcio VARCHAR(1000),
 	preu DECIMAL(5, 2) NOT NULL,
 	foto_generica_seccio VARCHAR(100) NOT NULL,
