@@ -161,9 +161,9 @@ if(!isset($_SESSION)){
                     $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
             },
-            error: function() {
-                //show alert error
-                //TODO show error
+            error: function(err) {
+                showError($sideAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                console.log(err);
             }
         });
     }
@@ -216,9 +216,9 @@ if(!isset($_SESSION)){
                     $userInfo.text("Hola, " + user['nom'] + " (" + user['userID'] + ")");
                 }
             },
-            error: function() {
-                //show alert error
-                //TODO show error
+            error: function(err) {
+                showError($sideAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                console.log(err);
             }
         });
     }

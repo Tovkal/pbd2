@@ -210,8 +210,8 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                         result = JSON.parse(returned_data);
                     } catch (err) {
                         showError($mainAlert, "La resposta del selector de seccions no es correcta");
-                        $mainAlert.html(returned_data);
-                        alert(returned_data);
+                        console.log(err);
+                        console.log(returned_data);
                     }
 
                     if (result) {
@@ -227,6 +227,10 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                             });
                         }
                     }
+                },
+                error: function(err) {
+                    showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                    console.log(err);
                 }
             });
         }
@@ -245,7 +249,8 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     result = JSON.parse(returned_data);
                 } catch (err) {
                     showError($mainAlert, "La resposta a la creació de l'anunci no es correcta.");
-                    $mainAlert.html(returned_data);
+                    console.log(err);
+                    console.log(returned_data);
                 }
 
                 if (result['error'] == true) {
@@ -254,9 +259,9 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     showSuccess($mainAlert, "S'ha creat l'anunci correctament", 2500);
                 }
             },
-            error: function() {
-                //show alert error
-                //TODO show error
+            error: function(err) {
+                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                console.log(err);
             }
         });
     }

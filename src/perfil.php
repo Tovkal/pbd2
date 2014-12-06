@@ -30,8 +30,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 
         $_SESSION['descripcio_privilegi'] = $result['descripcio'];
     } else {
-        //TODO Millorar presentació error
-        echo "Error obtening la descripció del nivell de privilegis de l'usuari amb userID: " . $_SESSION['userID'];
+        echo "Error obtenint la descripció del nivell de privilegis de l'usuari amb userID: " . $_SESSION['userID'];
         print_r($select->errorInfo());
     }
 }
@@ -133,9 +132,9 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
                     location.reload();
                 }
             },
-            error: function() {
-                //show alert error
-                //TODO show error
+            error: function(err) {
+                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.")
+                console.log(err);
             }
         });
     }
