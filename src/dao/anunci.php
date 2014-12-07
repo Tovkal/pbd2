@@ -17,7 +17,7 @@ if (Common::is_ajax()) {
     if (isset($_POST['action']) && !empty($_POST['action'])) {
         if ($_POST['action'] == "crear") {
             validateInputCrear();
-        } else if ($_POST['action'] == "modificar" && isset($_POST['id']) && !empty($_POST['id'])) {
+        } else if ($_POST['action'] == "consultar" && isset($_POST['id']) && !empty($_POST['id'])) {
             echo json_encode(fetchAnunci());
         } else if ($_POST['action'] == "modificar") {
             echo json_encode(modificarAnunci());

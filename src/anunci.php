@@ -264,7 +264,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 type: "POST",
                 datatype: "json",
                 url: "dao/anunci.php",
-                data: "action=" + action + "&id=" + getUrlParameter("id"),
+                data: "action=consultar&id=" + getUrlParameter("id"),
                 success: function(returned_data) {
                     var result;
                     try {
@@ -306,6 +306,59 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 }
             })
         } else if (action == "consultar") {
+            showInfo($mainAlert, "Carregant dades. Per favor esperi.");
+            $anunciForm.find("h2").text("Consultar anunci");
+            $anunciForm.find("input, select, textarea").attr('readonly', 'readonly');
+            $actionBtn.hideBootstrap();
+            $("#photoUpload").hideBootstrap();
+            $("#photoPreview").showBootstrap();
+            $(".help-block").hideBootstrap();
+            $.ajax({
+                type: "POST",
+                datatype: "json",
+                url: "dao/anunci.php",
+                data: "action=consultar&id=" + getUrlParameter("id"),
+                success: function(returned_data) {
+                    var result;
+                    try {
+                        result = JSON.parse(returned_data);
+                    } catch (err) {
+                        showError($mainAlert, "La resposta del selector de seccions no es correcta");
+                        console.log(returned_data);
+                        console.log(err);
+                    }
+
+                    if (result) {
+                        if (result['error'] == true) {
+                            showError($mainAlert, result['error_msg']);
+                            $actionBtn.disable();
+                        } else {
+                            showSuccess($mainAlert, 'Dades carregades amb èxit.', 2000);
+
+                            var anunci = result['anunci'];
+                            $idAnunci.val(anunci['id']);
+                            $titolCurt.val(anunci['titolCurt']);
+                            $telefon.val(anunci['telefon']);
+                            $textAnunci.val(anunci['textAnunci']);
+                            $dataWeb.val(anunci['dataWeb']);
+                            $dataNoWeb.val(anunci['dataNoWeb']);
+                            $seccio.find("option[value=" + anunci['codi_seccio'] + "]").attr('selected', 'selected');
+
+                            if(anunci['foto']) {
+                                $photoName.val(anunci['foto']);
+                                $("#photoUpload").hideBootstrap();
+                                $("#photo").html("<img src='img/anuncis/" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
+                                $("#reuploadPhotoBtn").showBootstrap();
+                                $("#photoPreview").showBootstrap();
+                            }
+                        }
+                    }
+                },
+                error: function(err) {
+                    showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
+                    console.log(err);
+                }
+            })
 
         }
     }
