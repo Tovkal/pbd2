@@ -175,7 +175,7 @@ function editSeccio() {
     if (isset($_POST['descripcio'])) {
         $sql = $sql . ", descripcio = :descripcio";
         if (empty($_POST['descripcio'])) {
-            $parameters['descripcio'] = "NULL";
+            $parameters['descripcio'] = null;
         } else {
             $parameters['descripcio'] = $_POST['descripcio'];
         }

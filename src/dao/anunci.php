@@ -183,7 +183,7 @@ function modificarAnunci() {
     if (isset($_POST['textAnunci'])) {
         $values = $values . ", text_anunci = :textAnunci";
         if (empty($_POST['textAnunci'])) {
-            $parameters['textAnunci'] = "NULL";
+            $parameters['textAnunci'] = null;
         } else {
             $parameters['textAnunci'] = $_POST['textAnunci'];
         }
@@ -193,7 +193,7 @@ function modificarAnunci() {
     if (isset($_POST['photoName'])) {
         $values = $values . ", foto = :photoName";
         if(empty($_POST['photoName'])) {
-            $parameters['photoName'] = "NULL";
+            $parameters['photoName'] = null;
         } else {
             $parameters['photoName'] = $_POST['photoName'];
         }
