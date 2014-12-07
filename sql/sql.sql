@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS Anunci (
 	codi_seccio INT NOT NULL,
 	nombre_canvis INT DEFAULT 0,
 	id_usuari INT NOT NULL,
+	actiu BIT(1) DEFAULT 1,
 	PRIMARY KEY(id),
 	FOREIGN KEY (codi_seccio) REFERENCES Seccio(codi_seccio),
 	FOREIGN KEY (id_usuari) REFERENCES Usuari(id)

@@ -60,7 +60,7 @@ if(!isset($_SESSION)){
     <div class="col-md-12">
         <p class="lead">Anuncis</p>
         <button id="nouAnunci" type="button" class="btn btn-primary" onclick="crearAnunci()">Publicar anunci</button>
-        <button id="veureAnuncis" type="button" class="btn btn-primary">Veure anuncis</button>
+        <button id="veureAnuncis" type="button" class="btn btn-primary" onclick="veureMeusAuncis()">Els meus anuncis</button>
     </div>
 </div>
 <div id="adminSection" class="row row-centered row-top-margin hidden">
@@ -223,20 +223,6 @@ if(!isset($_SESSION)){
         });
     }
 
-
-    // Redirections
-    function modifyProfile() {
-        window.location.href = "perfil.php";
-    }
-
-    function crearAnunci() {
-        window.location.href = "anunci.php?a=crear";
-    }
-
-    function adminSeccions() {
-        window.location.href = "admin_seccions.php";
-    }
-
     function doLogout() {
         $loginButton.showBootstrap();
         $signupButton.showBootstrap();
@@ -257,6 +243,23 @@ if(!isset($_SESSION)){
          * Per qualque motiu, quan aqui posava un session_destroy aquest s'executava quan refrescaves sa pàgina un parell
          * de vegades sense cridar a aquesta funcio, per això he afegit un php especific per logout
          */
-        window.location = "dao/logout.php";
+        window.location = "scripts/logout.php";
+    }
+
+    // Redirections
+    function modifyProfile() {
+        window.location.href = "perfil.php";
+    }
+
+    function crearAnunci() {
+        window.location.href = "anunci.php?a=crear";
+    }
+
+    function adminSeccions() {
+        window.location.href = "admin_seccions.php";
+    }
+
+    function veureMeusAuncis() {
+        window.location.href = "meus_anuncis.php";
     }
 </script>

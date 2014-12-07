@@ -33,17 +33,17 @@ if($_FILES['SelectedFile']['type'] == 'image/png' || $_FILES['SelectedFile']['ty
     }
 
     // Check if the file exists
-    if(file_exists('../upload/' . $_FILES['SelectedFile']['name'])){
+    if(file_exists('../img/anuncis/' . $_FILES['SelectedFile']['name'])){
         outputJSON('File with that name already exists.', 'success');
     }
 
     // Upload file
-    if(!move_uploaded_file($_FILES['SelectedFile']['tmp_name'], '../upload/' . $_FILES['SelectedFile']['name'])){
+    if(!move_uploaded_file($_FILES['SelectedFile']['tmp_name'], '../img/anuncis/' . $_FILES['SelectedFile']['name'])){
         outputJSON('Error uploading file - check destination is writeable.');
     }
 
     // Success!
-    outputJSON('File uploaded successfully to "' . '../upload/' . $_FILES['SelectedFile']['name'] . '".', 'success');
+    outputJSON('File uploaded successfully to "' . '../img/anuncis/' . $_FILES['SelectedFile']['name'] . '".', 'success');
 
 } else {
     outputJSON('Unsupported filetype uploaded.');

@@ -21,6 +21,10 @@ if (Common::is_ajax()) {
             echo json_encode(fetchAnunci());
         } else if ($_POST['action'] == "modificar") {
             echo json_encode(modificarAnunci());
+        } else if ($_POST['action'] == "getList") {
+            echo json_encode(getList());
+        } else if ($_POST['action'] == "eliminar") {
+            echo json_encode(deleteAnunci());
         } else {
             $result = array("error" => true, "error_msg" => "Acció desconeguda");
             echo json_encode($result);
@@ -112,6 +116,8 @@ function crearAnunci() {
         return array("error" => true, "error_msg" => "No s'ha pogut crear l'anunci", "db_error_msg" => ($select->errorInfo()));
     }
 }
+
+// TODO - tovkal - 07/12/2014 - Crear trigger que posi dateNoWeb a hora 23:59:59 enlloc de 0
 
 /**
  * Parse date to datetime format (dd/mm/yyyy -> yyyy-mm-dd)
@@ -210,6 +216,56 @@ function modificarAnunci() {
         return array("error" => false);
     } else {
         return array("error" => true, "error_msg" => "No s'ha pogut modificar l'anunci", "db_error_msg" => ($update->errorInfo()));
+    }
+}
+
+function getList() {
+    $db = Common::initPDOConnection("BDII_08");
+    $sql = "SELECT id, Anunci.titol_curt as 'titol_curt', telefon, date(data_web) as 'data_web', date(data_no_web) as 'data_no_web', foto, Seccio.titol_curt as 'titol_seccio'  FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :idUsuari";
+    $select = $db->prepare($sql);
+    $wasSuccessful = $select->execute(array('idUsuari' => $_SESSION['id_usuari']));
+    if ($wasSuccessful) {
+
+        $anuncis = array();
+        foreach($select as $anunci) {
+            $dadesAnunci = array(
+                'titolCurt' => $anunci['titol_curt'],
+                'dataWeb' => parseDateFromDBFormat($anunci['data_web']),
+                'dataNoWeb' => parseDateFromDBFormat($anunci['data_no_web']),
+                'foto' => $anunci['foto'],
+                'titol_seccio' => $anunci['titol_seccio']
+            );
+            $anuncis[$anunci['id']] = $dadesAnunci;
+        };
+
+        $response = array("error" => false, 'anuncis' => $anuncis);
+
+        // Close DB connection
+        $db = null;
+
+        return $response;
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut recuperar la llista d'anuncis", "db_error_msg" => ($select->errorInfo()));
+    }
+}
+
+function deleteAnunci() {
+    $db = Common::initPDOConnection("BDII_08");
+    $sql = "UPDATE Anunci SET actiu = 0 WHERE id = :id";
+    $parameters = array(
+        'id' => $_POST['idAnunci']
+    );
+
+    $update = $db->prepare($sql);
+    $wasSuccessful = $update->execute($parameters);
+    if ($wasSuccessful) {
+
+        // Close DB connection
+        $db = null;
+
+        return array("error" => false);
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut eliminar l'anunci. Intenta-ho més tard.", "db_error_msg" => ($update->errorInfo()));
     }
 }
 
