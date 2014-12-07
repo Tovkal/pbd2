@@ -124,6 +124,10 @@ function updateUser() {
         $parameters['nom'] = $_POST['nom'];
     }
 
+    if (sizeof($parameters) == 0) {
+        return array("error" => true, "error_msg" => "No s'ha rebut cap dada a modificar");
+    }
+
     $parameters['id'] = $_SESSION['id_usuari'];
 
     $query = $db->prepare($query . " WHERE id = :id");

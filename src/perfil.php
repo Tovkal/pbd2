@@ -128,6 +128,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 
                 if (result['error'] == true) {
                     showError($mainAlert, result['error_msg']);
+                    console.log(result['db_msg_error']);
                 } else {
                     location.reload();
                 }

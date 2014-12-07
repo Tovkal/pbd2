@@ -46,8 +46,13 @@ CREATE TABLE IF NOT EXISTS Anunci (
 	FOREIGN KEY (id_usuari) REFERENCES Usuari(id)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE TRIGGER augmentar_contador_canvis AFTER UPDATE ON Anunci 
-FOR EACH ROW SET @nombre_canvis = @nombre_canvis + 1;
+CREATE TRIGGER increment_nombre_canvis_set_hora_data_no_web 
+BEFORE UPDATE ON Anunci FOR EACH ROW 
+	SET NEW.nombre_canvis = OLD.nombre_canvis + 1, NEW.data_no_web = CONCAT_WS(' ', DATE(OLD.data_no_web), '23:59:59');
+
+CREATE TRIGGER set_hora_data_no_web_insert
+BEFORE INSERT ON Anunci FOR EACH ROW
+	SET NEW.data_no_web = CONCAT_WS(' ', DATE(NEW.data_no_web), '23:59:59');
 
 INSERT INTO Privilegi (descripcio) VALUES ('Administrador'), ('Anunciant');
 INSERT INTO Seccio (titol_curt, preu, foto_generica_seccio) VALUES ('Vivendes', '1', 'casa.png'), ('Cotxes', '0.5', 'cotxo.png'), ('Ordinadors', '0.25', 'alienware.png');

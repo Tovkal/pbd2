@@ -104,7 +104,7 @@ function setupTable() {
             if (result) {
                 if (result['error'] == true) {
                     $anuncisTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació dels anuncis. Intenta actualtizar la pàgina.</td></tr>");
-                    console.log(result['error_msg']);
+                    console.log(result['db_msg_error']);
                 } else {
                     $.each(result['anuncis'], function (key, value) {
                         addRowToTable(key, value);
@@ -149,7 +149,7 @@ function deleteAnunci(idAnunci) {
             if (result) {
                 if (result['error'] == true) {
                     showError($mainAlert, result['error_msg']);
-                    console.log(result['error_msg']);
+                    console.log(result['db_msg_error']);
                 } else {
                     showSuccess($mainAlert, "S'ha eliminat correctament l'anunci", 2000);
                     $anuncisTable.find("tbody").find("tr[anunci=" + idAnunci + "]").remove();

@@ -50,3 +50,9 @@ function showSuccess($alert, msg, delay) {
         return !this.hasClass('hidden');
     };
 })(jQuery);
+
+function scrollToTop() {
+    $('html, body').animate({
+        scrollTop: $("#content").offset().top
+    }, 750);
+}

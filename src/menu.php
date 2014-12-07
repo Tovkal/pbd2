@@ -59,7 +59,7 @@ if(!isset($_SESSION)){
     <hr>
     <div class="col-md-12">
         <p class="lead">Anuncis</p>
-        <button id="nouAnunci" type="button" class="btn btn-primary" onclick="crearAnunci()">Publicar anunci</button>
+        <button id="nouAnunci" type="button" class="btn btn-primary" onclick="redirectCrearAnunci()">Publicar anunci</button>
         <button id="veureAnuncis" type="button" class="btn btn-primary" onclick="veureMeusAuncis()">Els meus anuncis</button>
     </div>
 </div>
@@ -251,7 +251,7 @@ if(!isset($_SESSION)){
         window.location.href = "perfil.php";
     }
 
-    function crearAnunci() {
+    function redirectCrearAnunci() {
         window.location.href = "anunci.php?a=crear";
     }
 

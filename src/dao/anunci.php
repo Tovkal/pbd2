@@ -117,8 +117,6 @@ function crearAnunci() {
     }
 }
 
-// TODO - tovkal - 07/12/2014 - Crear trigger que posi dateNoWeb a hora 23:59:59 enlloc de 0
-
 /**
  * Parse date to datetime format (dd/mm/yyyy -> yyyy-mm-dd)
  *
@@ -215,7 +213,7 @@ function modificarAnunci() {
 
         return array("error" => false);
     } else {
-        return array("error" => true, "error_msg" => "No s'ha pogut modificar l'anunci", "db_error_msg" => ($update->errorInfo()));
+        return array("error" => true, "error_msg" => "No s'ha pogut modificar l'anunci per un error amb la base de dades. Torna a intentar-ho en uns instants.", "db_error_msg" => ($update->errorInfo()));
     }
 }
 

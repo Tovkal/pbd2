@@ -198,7 +198,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                 if (result) {
                     if (result['error'] == true) {
                         $seccionsTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació de les seccions. Intenta actualtizar la pàgina.</td></tr>");
-                        console.log(result['error_msg']);
+                        console.log(result['db_msg_error']);
                     } else {
                         seccions = result['seccions'];
                         $.each(seccions, function (key, value) {
@@ -257,12 +257,9 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                 if (result) {
                     if (result['error'] == true) {
                         showError($editSeccioAlert, result['error_msg']);
-                        console.log(result['error_msg']);
+                        console.log(result['db_msg_error']);
                     } else {
                         showSuccess($mainAlert, "S'ha creat correctament la secció", 2000);
-                        /*$seccionsTable.find("tbody").find("tr").each(function() {
-                            this.remove();
-                        });*/
                         addRowToTable(result['seccio']['codi_seccio'], result['seccio']);
                         hideEditSeccio();
                     }
@@ -318,7 +315,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                 if (result) {
                     if (result['error'] == true) {
                         showError($editSeccioAlert, result['error_msg']);
-                        console.log(result['error_msg']);
+                        console.log(result['db_msg_error']);
                     } else {
                         showSuccess($mainAlert, "S'ha modificar correctament la secció", 2000);
                         $seccionsTable.find("tbody").find("tr").each(function() {
@@ -358,7 +355,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                 if (result) {
                     if (result['error'] == true) {
                         showError($mainAlert, result['error_msg']);
-                        console.log(result['error_msg']);
+                        console.log(result['db_msg_error']);
                     } else {
                         showSuccess($mainAlert, "S'ha eliminat correctament la secció", 2000);
                         $seccionsTable.find("tbody").find("tr[seccio=" + codi_seccio + "]").remove();

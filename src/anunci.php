@@ -221,6 +221,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 try {
                     result = JSON.parse(returned_data);
                 } catch (err) {
+                    scrollToTop();
                     showError($mainAlert, "La resposta del selector de seccions no es correcta");
                     console.log(err);
                     console.log(returned_data);
@@ -228,7 +229,9 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 
                 if (result) {
                     if (result['error'] == true) {
+                        scrollToTop();
                         showError($mainAlert, result['error_msg']);
+                        console.log(result['db_msg_error']);
                         $actionBtn.disable();
                     } else {
                         $.each(result['opcions'], function (key, value) {
@@ -241,6 +244,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 }
             },
             error: function(err) {
+                scrollToTop();
                 showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                 console.log(err);
             }
@@ -270,6 +274,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     try {
                         result = JSON.parse(returned_data);
                     } catch (err) {
+                        scrollToTop();
                         showError($mainAlert, "La resposta del selector de seccions no es correcta");
                         console.log(returned_data);
                         console.log(err);
@@ -277,9 +282,12 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 
                     if (result) {
                         if (result['error'] == true) {
+                            scrollToTop();
                             showError($mainAlert, result['error_msg']);
+                            console.log(result['db_msg_error']);
                             $actionBtn.disable();
                         } else {
+                            scrollToTop();
                             showSuccess($mainAlert, 'Dades carregades amb èxit.', 2000);
                             var anunci = result['anunci'];
                             $idAnunci.val(anunci['id']);
@@ -301,6 +309,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     }
                 },
                 error: function(err) {
+                    scrollToTop();
                     showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                     console.log(err);
                 }
@@ -323,6 +332,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     try {
                         result = JSON.parse(returned_data);
                     } catch (err) {
+                        scrollToTop();
                         showError($mainAlert, "La resposta del selector de seccions no es correcta");
                         console.log(returned_data);
                         console.log(err);
@@ -330,9 +340,12 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 
                     if (result) {
                         if (result['error'] == true) {
+                            scrollToTop();
                             showError($mainAlert, result['error_msg']);
+                            console.log(result['db_msg_error']);
                             $actionBtn.disable();
                         } else {
+                            scrollToTop();
                             showSuccess($mainAlert, 'Dades carregades amb èxit.', 2000);
 
                             var anunci = result['anunci'];
@@ -355,6 +368,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     }
                 },
                 error: function(err) {
+                    scrollToTop();
                     showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                     console.log(err);
                 }
@@ -375,18 +389,23 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 try {
                     result = JSON.parse(returned_data);
                 } catch (err) {
+                    scrollToTop();
                     showError($mainAlert, "La resposta a la creació de l'anunci no es correcta.");
                     console.log(err);
                     console.log(returned_data);
                 }
 
                 if (result['error'] == true) {
+                    scrollToTop();
                     showError($mainAlert, result['error_msg']);
+                    console.log(result['db_error_msg']);
                 } else {
+                    scrollToTop();
                     showSuccess($mainAlert, "S'ha creat l'anunci correctament", 2500);
                 }
             },
             error: function(err) {
+                scrollToTop();
                 showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                 console.log(err);
             }
@@ -405,18 +424,23 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 try {
                     result = JSON.parse(returned_data);
                 } catch (err) {
+                    scrollToTop();
                     showError($mainAlert, "La resposta a la modificació de l'anunci no es correcta. Torni a intentar-ho");
                     console.log(err);
                     console.log(returned_data);
                 }
 
                 if (result['error'] == true) {
+                    scrollToTop();
                     showError($mainAlert, result['error_msg']);
+                    console.log(result['db_error_msg']);
                 } else {
+                    scrollToTop();
                     showSuccess($mainAlert, "S'ha modificat l'anunci correctament", 2500);
                 }
             },
             error: function(err) {
+                scrollToTop();
                 showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                 console.log(err);
             }
