@@ -19,6 +19,8 @@ if (Common::is_ajax()) {
             validateInputCrear();
         } else if ($_POST['action'] == "modificar" && isset($_POST['id']) && !empty($_POST['id'])) {
             echo json_encode(fetchAnunci());
+        } else if ($_POST['action'] == "modificar") {
+            echo json_encode(modificarAnunci());
         } else {
             $result = array("error" => true, "error_msg" => "Acció desconeguda");
             echo json_encode($result);
@@ -162,6 +164,52 @@ function fetchAnunci() {
         return $response;
     } else {
         return array("error" => true, "error_msg" => "No s'ha pogut crear l'anunci", "db_error_msg" => ($select->errorInfo()));
+    }
+}
+
+function modificarAnunci() {
+    $db = Common::initPDOConnection("BDII_08");
+
+    $values = "titol_curt = :titolCurt, telefon = :telefon, data_web = :dataWeb, data_no_web = :dataNoWeb, codi_seccio = :codiSeccio";
+    $parameters = array(
+        'id' => $_POST['idAnunci'],
+        'titolCurt' => $_POST['titolCurt'],
+        'telefon' => $_POST['telefon'],
+        'dataWeb' => parseDateToDBFormat($_POST['dataWeb']),
+        'dataNoWeb' => parseDateToDBFormat($_POST['dataNoWeb']),
+        'codiSeccio' => $_POST['seccio']
+    );
+
+    if (isset($_POST['textAnunci'])) {
+        $values = $values . ", text_anunci = :textAnunci";
+        if (empty($_POST['textAnunci'])) {
+            $parameters['textAnunci'] = "NULL";
+        } else {
+            $parameters['textAnunci'] = $_POST['textAnunci'];
+        }
+
+    }
+
+    if (isset($_POST['photoName'])) {
+        $values = $values . ", foto = :photoName";
+        if(empty($_POST['photoName'])) {
+            $parameters['photoName'] = "NULL";
+        } else {
+            $parameters['photoName'] = $_POST['photoName'];
+        }
+    }
+
+    $sql = "UPDATE Anunci SET {$values} WHERE id = :id";
+    $update = $db->prepare($sql);
+    $wasSuccessful = $update->execute($parameters);
+    if ($wasSuccessful) {
+
+        // Close DB connection
+        $db = null;
+
+        return array("error" => false);
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut modificar l'anunci", "db_error_msg" => ($update->errorInfo()));
     }
 }
 

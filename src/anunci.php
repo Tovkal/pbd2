@@ -40,7 +40,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
         <div id="content" class="col-md-9 border">
             <form id="anunciForm" class="form" role="form" style="margin-bottom: 0;">
                 <input id="action" name="action" type="hidden" />
-                <input id="idAunci" name="idAnunci" type="hidden" />
+                <input id="idAnunci" name="idAnunci" type="hidden" />
                 <input id="photoName" name="photoName" type="hidden" />
                 <div class="row">
                     <div class="col-md-12">
@@ -116,6 +116,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                         <div id="photoAlert" class="hidden" role="alert">
                         </div>
                         <div id="photoUpload">
+                            <span class="help-block">La foto es opcional.</span>
                             <!-- Standar Form -->
                             <label>
                                 Selecciona una foto del teu ordenador
@@ -256,7 +257,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
         } else if (action == "modificar") {
             $anunciForm.find("h2").text("Modificar anunci");
             showInfo($mainAlert, "Carregant dades. Per favor esperi.");
-            $actionBtn.attr("onclick", "modificarAnunci();").addClass("btn-primari").text("Modificar");
+            $actionBtn.attr("onclick", "modificarAnunci();").addClass("btn-primary").text("Modificar");
             $action.val("modificar");
 
             $.ajax({
@@ -281,10 +282,10 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                         } else {
                             showSuccess($mainAlert, 'Dades carregades amb èxit.', 2000);
                             var anunci = result['anunci'];
-                            $idAnunci.val(result['id']);
+                            $idAnunci.val(anunci['id']);
                             $titolCurt.val(anunci['titolCurt']);
                             $telefon.val(anunci['telefon']);
-                            $textAnunci.val(getOptionalInput(anunci['textAnunci']));
+                            $textAnunci.val(anunci['textAnunci']);
                             $dataWeb.val(anunci['dataWeb']);
                             $dataNoWeb.val(anunci['dataNoWeb']);
                             $seccio.find("option[value=" + anunci['codi_seccio'] + "]").attr('selected', 'selected');
@@ -305,13 +306,6 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                 }
             })
         }
-    }
-
-    function getOptionalInput(string) {
-        if (string == "NULL") {
-            return "";
-        }
-        return string;
     }
 
     function crearAnunci() {
@@ -335,6 +329,36 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     showError($mainAlert, result['error_msg']);
                 } else {
                     showSuccess($mainAlert, "S'ha creat l'anunci correctament", 2500);
+                }
+            },
+            error: function(err) {
+                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
+                console.log(err);
+            }
+        });
+    }
+
+    function modificarAnunci() {
+        var data = $("#anunciForm").serialize();
+        $.ajax({
+            type: "POST",
+            datatype: "json",
+            url: "dao/anunci.php",
+            data: data,
+            success: function(returned_data) {
+                var result;
+                try {
+                    result = JSON.parse(returned_data);
+                } catch (err) {
+                    showError($mainAlert, "La resposta a la modificació de l'anunci no es correcta. Torni a intentar-ho");
+                    console.log(err);
+                    console.log(returned_data);
+                }
+
+                if (result['error'] == true) {
+                    showError($mainAlert, result['error_msg']);
+                } else {
+                    showSuccess($mainAlert, "S'ha modificat l'anunci correctament", 2500);
                 }
             },
             error: function(err) {
