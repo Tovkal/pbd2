@@ -172,9 +172,13 @@ function editSeccio() {
         'foto' => $_POST['photoName'],
         'codi_seccio' => $_POST['codi_seccio']
     );
-    if (isset($_POST['descripcio']) && !empty($_POST['descripcio'])) {
+    if (isset($_POST['descripcio'])) {
         $sql = $sql . ", descripcio = :descripcio";
-        $parameters['descripcio'] = $_POST['descripcio'];
+        if (empty($_POST['descripcio'])) {
+            $parameters['descripcio'] = "NULL";
+        } else {
+            $parameters['descripcio'] = $_POST['descripcio'];
+        }
     }
     $sql = $sql . " WHERE codi_seccio = :codi_seccio";
 

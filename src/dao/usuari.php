@@ -109,6 +109,8 @@ function updateUser() {
     $query = "UPDATE Usuari SET";
     $parameters = array();
     $wasSuccessful = null;
+
+    // TODO - tovkal - 07/12/2014 - Aquests ifs no fan falta
     if (isset($_POST['userID']) && !empty($_POST['userID'])) {
         $query = $query . " userID = :userID, ";
         $parameters['userID'] = $_POST['userID'];
