@@ -83,12 +83,12 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="preu" class="control-label">Preu*</label>
-                                    <input type="number" class="form-control obligatori" id="preu" name="preu" />
+                                    <input type="text" pattern="\d+(\.\d{2})?" class="form-control obligatori" id="preu" name="preu" />
+                                    <span class="help-block" >Cèntims separats per un punt.</span>
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <div id="photoAlert" class="hidden" role="alert">
-                                </div>
+                                <div id="photoAlert" class="hidden" role="alert"> </div>
                                 <div id="photoUpload">
                                     <!-- Standar Form -->
                                     <label>
@@ -167,6 +167,18 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
         setupTable();
     });
 
+    function addRowToTable(id, seccio) {
+        var $titolCurt = $("<td></td>").text(seccio['titolCurt']).addClass("col-md-2");
+        var $descripcio = $("<td></td>").text(seccio['descripcio'] ? seccio['descripcio'] : "").addClass("col-md-4");
+        var $preu = $("<td></td>").text(seccio['preu']).addClass("col-md-2");
+        var $foto = $("<td></td>").html("<img src='img/seccio/" + seccio['foto'] + "' style='width:100px;' />").addClass("col-md-3");
+        var $editBtn = $("<button></button>").attr("type", "button").attr("value", id).addClass("btn").addClass("btn-primary").html('<span class="glyphicon glyphicon-pencil"></span>').attr("onclick", "editSeccio(this.value)");
+        var $deleteBtn = $("<button></button>").attr("type", "button").attr("value", id).addClass("btn").addClass("btn-danger").html('<span class="glyphicon glyphicon-trash"></span>').attr("onclick", "deleteSeccio(this.value)");
+        var $buttons = $("<td></td>").append($editBtn).append($deleteBtn).addClass("col-md-1");
+        var $row = $("<tr></tr>").attr("seccio", id).append($foto).append($titolCurt).append($descripcio).append($preu).append($buttons);
+        $seccionsTable.append($row);
+    }
+
     function setupTable() {
         $.ajax({
             type: "POST",
@@ -190,16 +202,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                     } else {
                         seccions = result['seccions'];
                         $.each(seccions, function (key, value) {
-                            var $titolCurt = $("<td></td>").text(value['titolCurt']).addClass("col-md-2");
-                            var $descripcio = $("<td></td>").text(value['descripcio'] ? value['descripcio'] : "").addClass("col-md-4");
-                            var $preu = $("<td></td>").text(value['preu']).addClass("col-md-2");
-                            var $foto = $("<td></td>").html("<img src='img/seccio/" + value['foto'] + "' style='width:100px;' />").addClass("col-md-3");
-                            $("#photoName").val(value['foto']);
-                            var $editBtn = $("<button></button>").attr("type", "button").attr("value", key).addClass("btn").addClass("btn-primary").html('<span class="glyphicon glyphicon-pencil"></span>').attr("onclick", "editSeccio(this.value)");
-                            var $deleteBtn = $("<button></button>").attr("type", "button").attr("value", key).addClass("btn").addClass("btn-danger").html('<span class="glyphicon glyphicon-trash"></span>').attr("onclick", "deleteSeccio(this.value)");
-                            var $buttons = $("<td></td>").append($editBtn).append($deleteBtn).addClass("col-md-1");
-                            var $row = $("<tr></tr>").attr("id", "seccio" + key).append($foto).append($titolCurt).append($descripcio).append($preu).append($buttons);
-                            $seccionsTable.append($row);
+                            addRowToTable(key, value);
                         });
                     }
                 }
@@ -212,6 +215,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
     }
 
     function showEditSeccio() {
+        $editSeccioAlert.hideBootstrap();
         $editSeccio.showBootstrap();
         $('html, body').animate({
             scrollTop: $editSeccio.offset().top
@@ -226,13 +230,49 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
         $editSeccio.find("h4").text("Crear secció");
         $crearBtn.text("Crear");
         $crearBtn.attr("onclick", "submitCrearSeccio()");
-        $editSeccio.closest('form').find("input[type=text], textarea").val("");
+        $("#seccioForm").find("input[type=text], textarea, input[name=photoName]").val("");
         $action.val("create");
         showEditSeccio();
     }
 
     function submitCrearSeccio() {
+        $.ajax({
+            type: "POST",
+            datatype: "json",
+            url: "dao/seccio.php",
+            data: $("#seccioForm").serialize(),
+            success: function(returned_data) {
+                var result;
+                try {
+                    result = JSON.parse(returned_data);
+                } catch (err) {
+                    showError($editSeccioAlert, "No s'ha creat correctament la secció. Refresca la pàgina i torna a intentar-ho.");
+                    if (result) {
+                        console.log(result['db_error_msg']);
+                    }
+                    console.log(err);
+                    console.log(returned_data);
+                }
 
+                if (result) {
+                    if (result['error'] == true) {
+                        showError($editSeccioAlert, result['error_msg']);
+                        console.log(result['error_msg']);
+                    } else {
+                        showSuccess($mainAlert, "S'ha creat correctament la secció", 2000);
+                        /*$seccionsTable.find("tbody").find("tr").each(function() {
+                            this.remove();
+                        });*/
+                        addRowToTable(result['seccio']['codi_seccio'], result['seccio']);
+                        hideEditSeccio();
+                    }
+                }
+            },
+            error: function(err) {
+                showError($editSeccioAlert, "No s'ha pogut contactar amb el servidor. Torna a provar-ho d'aquí uns segons.");
+                console.log(err);
+            }
+        });
     }
 
     function editSeccio(codi_seccio) {
@@ -267,7 +307,10 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                 try {
                     result = JSON.parse(returned_data);
                 } catch (err) {
-                    $seccionsTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació de les seccions. Intenta actualtizar la pàgina.</td></tr>");
+                    showError($editSeccioAlert, "No s'ha modificar correctament la secció. Refresca la pàgina i torna a intentar-ho.");
+                    if (result) {
+                        console.log(result['db_error_msg']);
+                    }
                     console.log(err);
                     console.log(returned_data);
                 }
@@ -294,7 +337,40 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
     }
 
     function deleteSeccio(codi_seccio) {
+        $.ajax({
+            type: "POST",
+            datatype: "json",
+            url: "dao/seccio.php",
+            data: "action=delete&codi_seccio=" + codi_seccio,
+            success: function(returned_data) {
+                var result;
+                try {
+                    result = JSON.parse(returned_data);
+                } catch (err) {
+                    showError($mainAlert, "No s'ha eliminat correctament la secció. Refresca la pàgina i torna a intentar-ho.");
+                    if (result) {
+                        console.log(result['db_error_msg']);
+                    }
+                    console.log("Returned data = " + returned_data);
+                    console.log("Parse error = " + err);
+                }
 
+                if (result) {
+                    if (result['error'] == true) {
+                        showError($mainAlert, result['error_msg']);
+                        console.log(result['error_msg']);
+                    } else {
+                        showSuccess($mainAlert, "S'ha eliminat correctament la secció", 2000);
+                        $seccionsTable.find("tbody").find("tr[seccio=" + codi_seccio + "]").remove();
+                        hideEditSeccio();
+                    }
+                }
+            },
+            error: function(err) {
+                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a provar-ho d'aquí uns segons.");
+                console.log(err);
+            }
+        });
     }
 </script>
 

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS Seccio (
 	descripcio VARCHAR(1000),
 	preu DECIMAL(5, 2) NOT NULL,
 	foto_generica_seccio VARCHAR(100) NOT NULL,
+	activa BIT(1) DEFAULT 1,
 	PRIMARY KEY(codi_seccio)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
