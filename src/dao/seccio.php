@@ -14,7 +14,7 @@ include "../common.php";
 
 if (Common::is_ajax()) {
     if (isset($_POST['action']) && !empty($_POST['action'])) {
-        if ($_POST['action'] == 'crearAnunci') {
+        if ($_POST['action'] == 'fetch') {
             echo json_encode(getSeccioList());
         } else if ($_POST['action'] == 'fullFetch') {
             echo json_encode(getFullSeccioList());

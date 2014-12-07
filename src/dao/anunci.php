@@ -17,6 +17,8 @@ if (Common::is_ajax()) {
     if (isset($_POST['action']) && !empty($_POST['action'])) {
         if ($_POST['action'] == "crear") {
             validateInputCrear();
+        } else if ($_POST['action'] == "modificar" && isset($_POST['id']) && !empty($_POST['id'])) {
+            echo json_encode(fetchAnunci());
         } else {
             $result = array("error" => true, "error_msg" => "Acció desconeguda");
             echo json_encode($result);
@@ -131,6 +133,36 @@ function parseDateFromDBFormat($strDate) {
     $dateTime = DateTime::createFromFormat('Y-m-d', $strDate);
     return $dateTime->format('d/m/Y');
 
+}
+
+function fetchAnunci() {
+    $db = Common::initPDOConnection("BDII_08");
+    $sql = "SELECT id, titol_curt, telefon, date(data_web) as data_web, date(data_no_web) as data_no_web, codi_seccio, foto, text_anunci FROM Anunci WHERE id = :id";
+    $select = $db->prepare($sql);
+    $wasSuccessful = $select->execute(array('id' => $_POST['id']));
+    if ($wasSuccessful) {
+
+        $result = $select->fetch(PDO::FETCH_ASSOC);
+        $anunci = array(
+            'id' => $result['id'],
+            'titolCurt' => $result['titol_curt'],
+            'telefon' => $result['telefon'],
+            'dataWeb' => parseDateFromDBFormat($result['data_web']),
+            'dataNoWeb' => parseDateFromDBFormat($result['data_no_web']),
+            'codi_seccio' => $result['codi_seccio'],
+            'foto' => $result['foto'],
+            'textAnunci' => $result['text_anunci']
+        );
+
+        $response = array("error" => false, 'anunci' => $anunci);
+
+        // Close DB connection
+        $db = null;
+
+        return $response;
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut crear l'anunci", "db_error_msg" => ($select->errorInfo()));
+    }
 }
 
 ?>

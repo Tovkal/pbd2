@@ -39,8 +39,9 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
     <div class="row">
         <div id="content" class="col-md-9 border">
             <form id="anunciForm" class="form" role="form" style="margin-bottom: 0;">
-                <input id="photoName" name="photoName" type="hidden" />
                 <input id="action" name="action" type="hidden" />
+                <input id="idAunci" name="idAnunci" type="hidden" />
+                <input id="photoName" name="photoName" type="hidden" />
                 <div class="row">
                     <div class="col-md-12">
                         <h2>Crear anunci</h2>
@@ -74,7 +75,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                         <div class="form-group">
                             <label for="dataWeb">Data de publicació*</label>
                             <div class='input-group date' id='dataWeb'>
-                                <input type='text' id="dataWeb" name="dataWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
+                                <input type='text' id="dataWebInput" name="dataWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
@@ -83,7 +84,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                         <div class="form-group">
                             <label for="dataNoWeb">Data de despublicació*</label>
                             <div class='input-group date' id='dataNoWeb'>
-                                <input type='text' id="dataNoWeb" name="dataNoWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
+                                <input type='text' id="dataNoWebInput" name="dataNoWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
@@ -163,7 +164,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
             <div class="row" style="padding-bottom: 20px;">
                 <hr>
                 <div class="col-md-12">
-                    <button id="crearBtn" class="btn btn-success pull-right" onclick="submitAnunci();">Crear</button>
+                    <button id="actionBtn" class="btn pull-right" onclick="">Crear</button>
                 </div>
             </div>
         </div>
@@ -173,9 +174,20 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
     </div>
 </div>
 <script type="application/javascript">
-    var $form = $('#anunciForm');
+    var $anunciForm = $('#anunciForm');
     var $mainAlert = $("#mainAlert");
-    var $crearBtn = $("#crearBtn");
+    var $actionBtn = $("#actionBtn");
+
+    // Form inputs
+    var $action = $("#action");
+    var $idAnunci = $("#idAnunci");
+    var $photoName = $("#photoName");
+    var $titolCurt = $("#titolCurt");
+    var $telefon = $("#telefon");
+    var $textAnunci = $("#textAnunci");
+    var $dataWeb = $("#dataWebInput");
+    var $dataNoWeb = $("#dataNoWebInput");
+    var $seccio = $("#seccio");
 
     $(document).ready(function() {
         var action = getUrlParameter("a");
@@ -197,34 +209,93 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
         }
     }
 
+    function loadSeccions() {
+        $.ajax({
+            type: "POST",
+            datatype: "json",
+            url: "dao/seccio.php",
+            data: "action=fetch",
+            success: function(returned_data) {
+                var result;
+                try {
+                    result = JSON.parse(returned_data);
+                } catch (err) {
+                    showError($mainAlert, "La resposta del selector de seccions no es correcta");
+                    console.log(err);
+                    console.log(returned_data);
+                }
+
+                if (result) {
+                    if (result['error'] == true) {
+                        showError($mainAlert, result['error_msg']);
+                        $actionBtn.disable();
+                    } else {
+                        $.each(result['opcions'], function (key, value) {
+                            $seccio
+                                .append($("<option></option>")
+                                    .attr("value", key)
+                                    .text(value));
+                        });
+                    }
+                }
+            },
+            error: function(err) {
+                showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
+                console.log(err);
+            }
+        });
+    }
+
     function setupSeccio(action) {
+        loadSeccions();
         if (action == 'crear') {
+            $anunciForm.find("h2").text("Crear anunci");
+            $actionBtn.attr("onclick", "crearAnunci();").addClass("btn-success").text("Crear");
+            $action.val("crear");
+
+        } else if (action == "modificar") {
+            $anunciForm.find("h2").text("Modificar anunci");
+            showInfo($mainAlert, "Carregant dades. Per favor esperi.");
+            $actionBtn.attr("onclick", "modificarAnunci();").addClass("btn-primari").text("Modificar");
+            $action.val("modificar");
+
             $.ajax({
                 type: "POST",
                 datatype: "json",
-                url: "dao/seccio.php",
-                data: "action=" + action + "Anunci",
+                url: "dao/anunci.php",
+                data: "action=" + action + "&id=" + getUrlParameter("id"),
                 success: function(returned_data) {
                     var result;
                     try {
                         result = JSON.parse(returned_data);
                     } catch (err) {
                         showError($mainAlert, "La resposta del selector de seccions no es correcta");
-                        console.log(err);
                         console.log(returned_data);
+                        console.log(err);
                     }
 
                     if (result) {
                         if (result['error'] == true) {
                             showError($mainAlert, result['error_msg']);
-                            $crearBtn.disable();
+                            $actionBtn.disable();
                         } else {
-                            $.each(result['opcions'], function (key, value) {
-                                $('#seccio')
-                                    .append($("<option></option>")
-                                        .attr("value", key)
-                                        .text(value));
-                            });
+                            showSuccess($mainAlert, 'Dades carregades amb èxit.', 2000);
+                            var anunci = result['anunci'];
+                            $idAnunci.val(result['id']);
+                            $titolCurt.val(anunci['titolCurt']);
+                            $telefon.val(anunci['telefon']);
+                            $textAnunci.val(getOptionalInput(anunci['textAnunci']));
+                            $dataWeb.val(anunci['dataWeb']);
+                            $dataNoWeb.val(anunci['dataNoWeb']);
+                            $seccio.find("option[value=" + anunci['codi_seccio'] + "]").attr('selected', 'selected');
+
+                            if(anunci['foto']) {
+                                $photoName.val(anunci['foto']);
+                                $("#photoUpload").hideBootstrap();
+                                $("#photo").html("<img src='upload/" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
+                                $("#reuploadPhotoBtn").showBootstrap();
+                                $("#photoPreview").showBootstrap();
+                            }
                         }
                     }
                 },
@@ -232,11 +303,18 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                     showError($mainAlert, "No s'ha pogut contactar amb el servidor. Torna a intentar-ho en uns segons.");
                     console.log(err);
                 }
-            });
+            })
         }
     }
 
-    function submitAnunci() {
+    function getOptionalInput(string) {
+        if (string == "NULL") {
+            return "";
+        }
+        return string;
+    }
+
+    function crearAnunci() {
         var data = $("#anunciForm").serialize();
         $.ajax({
             type: "POST",

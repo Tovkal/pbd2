@@ -51,3 +51,4 @@ FOR EACH ROW SET @nombre_canvis = @nombre_canvis + 1;
 INSERT INTO Privilegi (descripcio) VALUES ('Administrador'), ('Anunciant');
 INSERT INTO Seccio (titol_curt, preu, foto_generica_seccio) VALUES ('Vivendes', '1', 'casa.png'), ('Cotxes', '0.5', 'cotxo.png'), ('Ordinadors', '0.25', 'alienware.png');
 INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES ('admin', '1234', 'Jaume Más', 1);
+INSERT INTO Anunci (id_usuari, titol_curt, telefon, data_web, data_no_web, codi_seccio) VALUES ('1', 'asdasdsadsadas', '123123123', '2014-12-06', '2014-12-06', '1');
