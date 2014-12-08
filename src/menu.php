@@ -72,6 +72,8 @@ if(!isset($_SESSION)){
     </div>
 </div>
 
+<hr>
+
 <script type="application/javascript">
 
     var $userForm = $("#userForm");

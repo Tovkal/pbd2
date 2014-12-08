@@ -43,9 +43,11 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 <body>
 
 <div class="wrapper container-fluid">
-    <div class="row">
-        <div class="col-md-12 border" >
-            <a href="index.php" >Inici</a>
+    <div class="row column border">
+        <div class="col-md-9" >
+            <a href="index.php">
+                <img src="img/logo.png" class="logo" />
+            </a>
         </div>
     </div>
     <div class="row">
