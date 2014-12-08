@@ -153,7 +153,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
 
 <script type="application/javascript">
     var seccions;
-    var $seccionsTable = $("#usuarisTable");
+    var $seccionsTable = $("#seccionsTable");
     var $mainAlert = $("#mainAlert");
     var $editSeccio = $("#editSeccio");
     var $titolCurt = $("#titolCurt");
