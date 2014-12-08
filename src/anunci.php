@@ -10,10 +10,6 @@ if(!isset($_SESSION)){
     session_start();
 }
 
-// Only logged users can view the page
-if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
-    header('Location: index.php');
-}
 ?>
 
 <html>
@@ -254,11 +250,17 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
     function setup(action) {
         loadSeccions();
         if (action == 'crear') {
+            <?php if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) { ?>
+                window.location.href = "index.php";
+            <?php } ?>
             $anunciForm.find("h2").text("Crear anunci");
             $actionBtn.attr("onclick", "crearAnunci();").addClass("btn-success").text("Crear");
             $action.val("crear");
 
         } else if (action == "modificar") {
+            <?php if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) { ?>
+                window.location.href = "index.php";
+            <?php } ?>
             $anunciForm.find("h2").text("Modificar anunci");
             showInfo($mainAlert, "Carregant dades. Per favor esperi.");
             $actionBtn.attr("onclick", "modificarAnunci();").addClass("btn-primary").text("Modificar");

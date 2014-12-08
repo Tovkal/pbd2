@@ -14,7 +14,6 @@ if(!isset($_SESSION)){
 // Only logged users can view the page
 if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
     header('Location: index.php');
-    echo "potato";
 }
 
 include "dao/common.php";
