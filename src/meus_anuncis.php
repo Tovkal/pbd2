@@ -20,6 +20,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
 <html>
 <head>
     <?php include "includes/head.html"; ?>
+    <title>Els meus anuncis</title>
 </head>
 <body>
 

@@ -39,6 +39,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 <html>
 <head>
     <?php include "includes/head.html"; ?>
+    <title>Perfil</title>
 </head>
 <body>
 

@@ -21,6 +21,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
 <html>
 <head>
     <?php include "includes/head.html"; ?>
+    <title>Administrar seccions</title>
 </head>
 <body>
 
@@ -152,7 +153,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
 
 <script type="application/javascript">
     var seccions;
-    var $seccionsTable = $("#seccionsTable");
+    var $seccionsTable = $("#usuarisTable");
     var $mainAlert = $("#mainAlert");
     var $editSeccio = $("#editSeccio");
     var $titolCurt = $("#titolCurt");

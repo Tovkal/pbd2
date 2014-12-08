@@ -59,7 +59,7 @@ if(!isset($_SESSION)){
     <hr>
     <div class="col-md-12">
         <p class="lead">Anuncis</p>
-        <button id="nouAnunci" type="button" class="btn btn-primary" onclick="redirectCrearAnunci()">Publicar anunci</button>
+        <button id="nouAnunci" type="button" class="btn btn-primary" onclick="redirectCrearAnunci()">Crear anunci</button>
         <button id="veureAnuncis" type="button" class="btn btn-primary" onclick="veureMeusAuncis()">Els meus anuncis</button>
     </div>
 </div>
@@ -68,7 +68,7 @@ if(!isset($_SESSION)){
     <div class="col-md-12">
         <p class="lead">Administració</p>
         <button type="button" class="btn btn-primary" onclick="adminSeccions();">Seccions</button>
-        <button type="button" class="btn btn-primary">Usuaris</button>
+        <button type="button" class="btn btn-primary" onclick="adminUsuaris();">Usuaris</button>
     </div>
 </div>
 
@@ -257,6 +257,10 @@ if(!isset($_SESSION)){
 
     function adminSeccions() {
         window.location.href = "admin_seccions.php";
+    }
+
+    function adminUsuaris() {
+        window.location.href = "admin_usuaris.php";
     }
 
     function veureMeusAuncis() {
