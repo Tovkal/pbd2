@@ -10,7 +10,7 @@ if(!isset($_SESSION)){
     session_start();
 }
 
-include "../common.php";
+include_once "common.php";
 
 if (Common::is_ajax()) {
     if (isset($_POST['userID']) && !empty($_POST['userID'])) {
@@ -110,7 +110,6 @@ function updateUser() {
     $parameters = array();
     $wasSuccessful = null;
 
-    // TODO - tovkal - 07/12/2014 - Aquests ifs no fan falta
     if (isset($_POST['userID']) && !empty($_POST['userID'])) {
         $query = $query . " userID = :userID, ";
         $parameters['userID'] = $_POST['userID'];

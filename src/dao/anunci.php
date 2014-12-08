@@ -11,7 +11,7 @@ if(!isset($_SESSION)){
     session_start();
 }
 
-include "../common.php";
+include "common.php";
 
 if (Common::is_ajax()) {
     if (isset($_POST['action']) && !empty($_POST['action'])) {
@@ -39,7 +39,6 @@ if (Common::is_ajax()) {
         $result = array("error" => true, "error_msg" => "Acció buida");
         echo json_encode($result);
     }
-
 
     exit();
 }
@@ -162,7 +161,7 @@ function fetchAnunci() {
             'dataWeb' => parseDateFromDBFormat($result['data_web']),
             'dataNoWeb' => parseDateFromDBFormat($result['data_no_web']),
             'codi_seccio' => $result['codi_seccio'],
-            'foto' => $result['foto'],
+            'foto' => $result['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($result['codi_seccio']) : "img/anuncis/" . $result['foto'],
             'textAnunci' => $result['text_anunci']
         );
 
@@ -223,20 +222,43 @@ function modificarAnunci() {
     }
 }
 
+function getFotoGenericaSeccio($codi_seccio) {
+    $db = Common::initPDOConnection("BDII_08");
+    $select = $db->prepare("SELECT foto_generica_seccio FROM Seccio WHERE codi_seccio = {$codi_seccio}");
+
+    $wasSuccessful = $select->execute();
+    if ($wasSuccessful) {
+
+        $result = $select->fetch(PDO::FETCH_ASSOC);
+
+        // Close DB connection
+        $db = null;
+
+        return $result['foto_generica_seccio'];
+    } else {
+        return "foto_404";
+    }
+}
+
 function getList() {
     $db = Common::initPDOConnection("BDII_08");
-    $sql = "SELECT id, Anunci.titol_curt as 'titol_curt', telefon, date(data_web) as 'data_web', date(data_no_web) as 'data_no_web', foto, Seccio.titol_curt as 'titol_seccio'  FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :idUsuari";
+    $sql = "SELECT id, Anunci.titol_curt as 'titol_curt', telefon, date(data_web) as 'data_web', date(data_no_web) as 'data_no_web', foto, Anunci.codi_seccio, Seccio.titol_curt as 'titol_seccio' FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :idUsuari";
     $select = $db->prepare($sql);
     $wasSuccessful = $select->execute(array('idUsuari' => $_SESSION['id_usuari']));
     if ($wasSuccessful) {
 
         $anuncis = array();
         foreach($select as $anunci) {
+
+            if ($anunci['foto'] == null) {
+
+            }
+
             $dadesAnunci = array(
                 'titolCurt' => $anunci['titol_curt'],
                 'dataWeb' => parseDateFromDBFormat($anunci['data_web']),
                 'dataNoWeb' => parseDateFromDBFormat($anunci['data_no_web']),
-                'foto' => $anunci['foto'],
+                'foto' => $anunci['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($anunci['codi_seccio']) : "img/anuncis/" . $anunci['foto'],
                 'titol_seccio' => $anunci['titol_seccio']
             );
             $anuncis[$anunci['id']] = $dadesAnunci;

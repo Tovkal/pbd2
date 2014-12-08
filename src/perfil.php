@@ -17,7 +17,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
     echo "potato";
 }
 
-include "common.php";
+include "dao/common.php";
 
 // Fetch user's privilege description if not known
 if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_privilegi'])) {

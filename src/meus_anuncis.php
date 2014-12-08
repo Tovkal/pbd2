@@ -68,12 +68,7 @@ $(document).ready(function() {
 });
 
 function addRowToTable(id, anunci) {
-    if (anunci['foto']) {
-        var $foto = $("<td></td>").html("<img src='img/anuncis/" + anunci['foto'] + "' style='width:100px;' />").addClass("col-md-2");
-    } else {
-        // TODO - tovkal - 07/12/2014 - Foto generica de secció
-        var $foto = $("<td></td>").html("//TODO").addClass("col-md-2");
-    }
+    var $foto = $("<td></td>").html("<img src='" + anunci['foto'] + "' style='width:100px;' />").addClass("col-md-2");
     var $titolCurt = $("<td></td>").text(anunci['titolCurt']).addClass("col-md-2");
     var $dataPub = $("<td></td>").text(anunci['dataWeb']).addClass("col-md-2");
     var $dataNoPub = $("<td></td>").text(anunci['dataNoWeb']).addClass("col-md-2");
@@ -97,14 +92,14 @@ function setupTable() {
             try {
                 result = JSON.parse(returned_data);
             } catch (err) {
-                $anuncisTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació dels anuncis. Intenta actualtizar la pàgina.</td></tr>");
+                $anuncisTable.append("<tr class='danger'><td colspan='6' style='text-align:center;'>No s'ha pogut carregar la informació dels anuncis. Intenta actualtizar la pàgina.</td></tr>");
                 console.log(err);
                 console.log(returned_data);
             }
 
             if (result) {
                 if (result['error'] == true) {
-                    $anuncisTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació dels anuncis. Intenta actualtizar la pàgina.</td></tr>");
+                    $anuncisTable.append("<tr class='danger'><td colspan='6' style='text-align:center;'>No s'ha pogut carregar la informació dels anuncis. Intenta actualtizar la pàgina.</td></tr>");
                     console.log(result['db_msg_error']);
                 } else {
                     $.each(result['anuncis'], function (key, value) {
@@ -114,7 +109,7 @@ function setupTable() {
             }
         },
         error: function(err) {
-            $anuncisTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació dels anuncis. Intenta actualtizar la pàgina.</td></tr>");
+            $anuncisTable.append("<tr class='danger'><td colspan='6' style='text-align:center;'>No s'ha pogut carregar la informació dels anuncis. Intenta actualtizar la pàgina.</td></tr>");
             console.log(err);
         }
     });

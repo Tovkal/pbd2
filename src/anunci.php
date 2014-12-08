@@ -301,7 +301,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                             if(anunci['foto']) {
                                 $photoName.val(anunci['foto']);
                                 $("#photoUpload").hideBootstrap();
-                                $("#photo").html("<img src='img/anuncis/" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
+                                $("#photo").html("<img src='" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
                                 $("#reuploadPhotoBtn").showBootstrap();
                                 $("#photoPreview").showBootstrap();
                             }
@@ -360,7 +360,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])) {
                             if(anunci['foto']) {
                                 $photoName.val(anunci['foto']);
                                 $("#photoUpload").hideBootstrap();
-                                $("#photo").html("<img src='img/anuncis/" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
+                                $("#photo").html("<img src='" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
                                 $("#reuploadPhotoBtn").showBootstrap();
                                 $("#photoPreview").showBootstrap();
                             }
