@@ -25,6 +25,12 @@ if (Common::is_ajax()) {
             echo json_encode(getList());
         } else if ($_POST['action'] == "eliminar") {
             echo json_encode(deleteAnunci());
+        } else if ($_POST['action'] == "fetchAnuncisUsuaris") {
+            echo json_encode(fetchAnuncisUsuaris());
+        } else if ($_POST['action'] == "facturaUsuari") {
+            echo json_encode(validateFactura());
+        } else if ($_POST['action'] == "facturaUsuariFiltrada") {
+            echo json_encode(validateFacturaFiltrada());
         } else {
             $result = array("error" => true, "error_msg" => "Acció desconeguda");
             echo json_encode($result);
@@ -264,6 +270,128 @@ function deleteAnunci() {
         return array("error" => false);
     } else {
         return array("error" => true, "error_msg" => "No s'ha pogut eliminar l'anunci. Intenta-ho més tard.", "db_error_msg" => ($update->errorInfo()));
+    }
+}
+
+function fetchAnuncisUsuaris() {
+    $db = Common::initPDOConnection("BDII_08");
+    $sql = "SELECT Usuari.id, Usuari.userID, Usuari.nom, COUNT(Anunci.id) as 'nombre_anuncis' FROM Anunci INNER JOIN Usuari WHERE Anunci.id_usuari = Usuari.id GROUP BY Usuari.id";
+
+    $select = $db->prepare($sql);
+    $wasSuccessful = $select->execute();
+    if ($wasSuccessful) {
+
+        $usuaris = array();
+        foreach($select as $usuari) {
+            $dadesUsuari = array(
+                'userID' => $usuari['userID'],
+                'nom' => $usuari['nom'],
+                'nombreAnuncis' => $usuari['nombre_anuncis']
+            );
+            $usuaris[$usuari['id']] = $dadesUsuari;
+        }
+
+        // Close DB connection
+        $db = null;
+
+        return array("error" => false, 'usuaris' => $usuaris);
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut eliminar l'anunci. Intenta-ho més tard.", "db_error_msg" => ($select->errorInfo()));
+    }
+}
+
+function validateFactura() {
+    if (isset($_POST['id']) && !empty($_POST['id'])) {
+        return generateFactura();
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha rebut la id de l'usuari del qual es vol emetre la factura. Torni a intentar-ho");
+    }
+}
+
+function generateFactura() {
+    $db = Common::initPDOConnection("BDII_08");
+    // TODO - tovkal - 08/12/2014 - Parametrizar preu canvi a una taula
+    $sql = "SELECT Anunci.id, Anunci.titol_curt, date(Anunci.data_publicacio) as 'data_publicacio', Seccio.preu as preu_seccio, nombre_canvis, (Seccio.preu + nombre_canvis*0.1) as total FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :id";
+
+    $select = $db->prepare($sql);
+    $wasSuccessful = $select->execute(array('id' => $_POST['id']));
+    if ($wasSuccessful) {
+
+        $llistaAnuncis = array();
+        $preuTotal = 0.0;
+        foreach($select as $anunci) {
+            $dadesAnunci = array(
+                'titolCurt' => $anunci['titol_curt'],
+                'data' => parseDateFromDBFormat($anunci['data_publicacio']),
+                'preuSeccio' => $anunci['preu_seccio'],
+                'nombreCanvis' => $anunci['nombre_canvis'],
+                'total' => $anunci['total']
+            );
+            $llistaAnuncis[$anunci['id']] = $dadesAnunci;
+            $preuTotal += $anunci['total'];
+        }
+
+        // Close DB connection
+        $db = null;
+
+        return array("error" => false, 'anuncis' => $llistaAnuncis, 'preuTotal' => $preuTotal);
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut eliminar l'anunci. Intenta-ho més tard.", "db_error_msg" => ($select->errorInfo()));
+    }
+}
+
+function validateFacturaFiltrada() {
+    if (isset($_POST['id']) && !empty($_POST['id'])) {
+        if (isset($_POST['dataInici']) && empty($_POST['dataInici']) && isset($_POST['dataFi']) && empty($_POST['dataFi'])) {
+            return generateFactura();
+        } else if ((isset($_POST['dataInici']) && !empty($_POST['dataInici'])) || (isset($_POST['dataFi']) && !empty($_POST['dataFi']))) {
+            return generateFacturaFiltrada();
+        }
+    }
+    return array("error" => true, "error_msg" => "No s'ha rebut la id de l'usuari del qual es vol emetre la factura. Torni a intentar-ho");
+}
+
+function generateFacturaFiltrada() {
+    $db = Common::initPDOConnection("BDII_08");
+    // TODO - tovkal - 08/12/2014 - Parametrizar preu canvi a una taula
+    $sql = "SELECT Anunci.id, Anunci.titol_curt, date(data_publicacio) as 'data_publicacio', Seccio.preu as preu_seccio, nombre_canvis, (Seccio.preu + nombre_canvis*0.1) as total FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :id";
+    $parameters = array('id' => $_POST['id']);
+
+    if (isset($_POST['dataInici']) && !empty($_POST['dataInici'])) {
+        $sql = $sql . " AND data_publicacio > :dataInici";
+        $parameters['dataInici'] = parseDateToDBFormat($_POST['dataInici']);
+    }
+
+    if (isset($_POST['dataFi']) && !empty($_POST['dataFi'])) {
+        $sql = $sql . " AND data_publicacio < :dataFi";
+        $parameters['dataFi'] = parseDateToDBFormat($_POST['dataFi']);
+    }
+
+
+    $select = $db->prepare($sql);
+    $wasSuccessful = $select->execute($parameters);
+    if ($wasSuccessful) {
+
+        $llistaAnuncis = array();
+        $preuTotal = 0.0;
+        foreach($select as $anunci) {
+            $dadesAnunci = array(
+                'titolCurt' => $anunci['titol_curt'],
+                'data' => parseDateFromDBFormat($anunci['data_publicacio']),
+                'preuSeccio' => $anunci['preu_seccio'],
+                'nombreCanvis' => $anunci['nombre_canvis'],
+                'total' => $anunci['total']
+            );
+            $llistaAnuncis[$anunci['id']] = $dadesAnunci;
+            $preuTotal += $anunci['total'];
+        }
+
+        // Close DB connection
+        $db = null;
+
+        return array("error" => false, 'anuncis' => $llistaAnuncis, 'preuTotal' => $preuTotal);
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut eliminar l'anunci. Intenta-ho més tard.", "db_error_msg" => ($select->errorInfo()));
     }
 }
 
