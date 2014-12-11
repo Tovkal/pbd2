@@ -104,7 +104,7 @@ if(!isset($_SESSION)){
         <?php if (isset($_SESSION['userID']) && !empty($_SESSION['userID'])) { ?>
             didLogin();
         $userInfo.text("Hola, <?php echo $_SESSION['nom'] ?> (<?php echo $_SESSION['userID'] ?>)");
-        <?php if (isset($_SESSION['id_privilegi']) && !empty($_SESSION['id_privilegi'])) { ?>
+        <?php if (isset($_SESSION['id_privilegi']) && !empty($_SESSION['id_privilegi']) && $_SESSION['id_privilegi'] == 1) { ?>
             adminLogin();
         <?php } } ?>
     }
