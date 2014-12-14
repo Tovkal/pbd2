@@ -89,14 +89,14 @@ if(!isset($_SESSION)){
                             </div>
                         </div>
                         <script type="application/javascript">
-                            var $dataWeb = $("#dataWeb");
-                            var $dataNoWeb = $("#dataNoWeb");
+                            var $dataWeb = $("#dataWebInput");
+                            var $dataNoWeb = $("#dataNoWebInput");
                             $(function () {
-                                var settings = {pickTime: false};
+                                var settings = {pickTime: false, date: "glyphicon glyphicon-calendar"};
                                 $dataWeb.datetimepicker(settings);
                                 $dataNoWeb.datetimepicker(settings);
                                 $dataWeb.on("dp.change",function (e) {
-                                    $('#dataNoWeb').data("DateTimePicker").setMinDate(e.date);
+                                    $dataNoWeb.data("DateTimePicker").setMinDate(e.date);
                                 });
                                 $dataNoWeb.on("dp.change",function (e) {
                                     $dataWeb.data("DateTimePicker").setMaxDate(e.date);
@@ -235,8 +235,8 @@ if(!isset($_SESSION)){
                         $.each(result['opcions'], function (key, value) {
                             $seccio
                                 .append($("<option></option>")
-                                    .attr("value", key)
-                                    .text(value));
+                                    .attr("value", value)
+                                    .text(key));
                         });
                     }
                 }
@@ -300,7 +300,7 @@ if(!isset($_SESSION)){
                             $textAnunci.val(anunci['textAnunci']);
                             $dataWeb.val(anunci['dataWeb']);
                             $dataNoWeb.val(anunci['dataNoWeb']);
-                            $seccio.find("option[value=" + anunci['codi_seccio'] + "]").attr('selected', 'selected');
+                            $seccio.find("option[value=" + anunci['codi_seccio'] + "]").attr('selected', true);
 
                             if(anunci['foto']) {
                                 $photoName.val(anunci['foto']);
@@ -365,7 +365,6 @@ if(!isset($_SESSION)){
                                 $photoName.val(anunci['foto']);
                                 $("#photoUpload").hideBootstrap();
                                 $("#photo").html("<img src='" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
-                                $("#reuploadPhotoBtn").showBootstrap();
                                 $("#photoPreview").showBootstrap();
                             }
                         }
