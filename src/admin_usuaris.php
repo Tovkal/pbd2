@@ -92,7 +92,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                                     <div class="form-group">
                                         <label for="dataWeb">Des de (inclòs)</label>
                                         <div class='input-group date' id='dataWeb'>
-                                            <input type='text' id="dataWebInput" name="dataInici" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
+                                            <input type='text' id="dataWebInput" name="dataWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
@@ -101,9 +101,9 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="dataNoWeb">Fins (exclòs)</label>
+                                        <label for="dataNoWeb">Fins (inclòs)</label>
                                         <div class='input-group date' id='dataNoWeb'>
-                                            <input type='text' id="dataNoWebInput" name="dataFi" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
+                                            <input type='text' id="dataNoWebInput" name="dataNoWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
@@ -112,14 +112,14 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                                 </div>
                             </div>
                             <script type="application/javascript">
-                                var $dataWeb = $("#dataWeb");
-                                var $dataNoWeb = $("#dataNoWeb");
+                                var $dataWeb = $("#dataWebInput");
+                                var $dataNoWeb = $("#dataNoWebInput");
                                 $(function () {
-                                    var settings = {pickTime: false};
+                                    var settings = {pickTime: false, date: "glyphicon glyphicon-calendar"};
                                     $dataWeb.datetimepicker(settings);
                                     $dataNoWeb.datetimepicker(settings);
                                     $dataWeb.on("dp.change",function (e) {
-                                        $('#dataNoWeb').data("DateTimePicker").setMinDate(e.date);
+                                        $dataNoWeb.data("DateTimePicker").setMinDate(e.date);
                                     });
                                     $dataNoWeb.on("dp.change",function (e) {
                                         $dataWeb.data("DateTimePicker").setMaxDate(e.date);
