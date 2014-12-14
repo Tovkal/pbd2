@@ -76,7 +76,7 @@ if(!isset($_SESSION)) {
                     <div class="row">
                         <div class="col-md-4 pull-right">
                             <button type="button" class="btn btn-primary pull-right" onclick="filterSearch();" >Aplicar</button>
-                            <button type="button" class="btn btn-primary pull-right" onclick="getAnuncis();" style="margin-right: 5px;" >Borrar tots els filtres</button>
+                            <button type="button" class="btn btn-primary pull-right" onclick="resetFilters();" style="margin-right: 5px;" >Borrar tots els filtres</button>
                         </div>
                     </div>
                 </form>
@@ -170,11 +170,11 @@ if(!isset($_SESSION)) {
     }
 
     function crearAnunci(anunci) {
-        return $("<div></div>").addClass('col-md-3').addClass('text-center').addClass('column-without-side-padding').addClass('recuadre-anunci').append(createFoto(anunci['foto'])).append(createTitol(anunci['titolCurt'])).append(createInfoButton(anunci['id']));
+        return $("<div></div>").addClass('col-md-3').addClass('text-center').addClass('column-without-side-padding').addClass('recuadre-anunci').append(createFoto(anunci['dir_foto'], anunci['foto'])).append(createTitol(anunci['titolCurt'])).append(createInfoButton(anunci['id']));
     }
 
-    function createFoto(foto) {
-        return $("<img />").attr("src", foto).addClass('thumbnail-anunci');
+    function createFoto(dir, foto) {
+        return $("<img />").attr("src", dir + foto).addClass('thumbnail-anunci');
     }
 
     function createTitol(titol) {
@@ -300,6 +300,12 @@ if(!isset($_SESSION)) {
                 console.log(err);
             }
         });
+    }
+
+    function resetFilters() {
+        $("#filterForm").find("input").val("");
+        $("#mainAlert").hideBootstrap();
+        getAnuncis();
     }
 </script>
 

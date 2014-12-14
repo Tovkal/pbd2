@@ -165,7 +165,9 @@ function fetchAnunci() {
             'dataWeb' => parseDateFromDBFormat($result['data_web']),
             'dataNoWeb' => parseDateFromDBFormat($result['data_no_web']),
             'codi_seccio' => $result['codi_seccio'],
-            'foto' => $result['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($result['codi_seccio']) : "img/anuncis/" . $result['foto'],
+            'foto_seccio' => $result['foto'] == null,
+            'dir_foto' => $result['foto'] == null ? "img/seccio/" : "img/anuncis/",
+            'foto' => $result['foto'] == null ? getFotoGenericaSeccio($result['codi_seccio']) : $result['foto'],
             'textAnunci' => $result['text_anunci']
         );
 
@@ -262,7 +264,9 @@ function getList() {
                 'titolCurt' => $anunci['titol_curt'],
                 'dataWeb' => parseDateFromDBFormat($anunci['data_web']),
                 'dataNoWeb' => parseDateFromDBFormat($anunci['data_no_web']),
-                'foto' => $anunci['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($anunci['codi_seccio']) : "img/anuncis/" . $anunci['foto'],
+                'foto_seccio' => $anunci['foto'] == null,
+                'dir_foto' => $anunci['foto'] == null ? "img/seccio/" : "img/anuncis/",
+                'foto' => $anunci['foto'] == null ? getFotoGenericaSeccio($anunci['codi_seccio']) : $anunci['foto'],
                 'titol_seccio' => $anunci['titol_seccio']
             );
             $anuncis[$anunci['id']] = $dadesAnunci;
@@ -449,7 +453,9 @@ function fetchAnuncisAmbSeccions() {
             $anunci = array(
                 'id' => $row['id'],
                 'titolCurt' => $row['titol_anunci'],
-                'foto' => $row['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($row['codi_seccio']) : "img/anuncis/" . $row['foto'],
+                'foto_seccio' => $row['foto'] == null,
+                'dir_foto' => $row['foto'] == null ? "img/seccio/" : "img/anuncis/",
+                'foto' => $row['foto'] == null ? getFotoGenericaSeccio($row['codi_seccio']) : $row['foto'],
             );
             $llistaAnuncis[$row['id']] = $anunci;
 
@@ -515,7 +521,9 @@ function fetchAnuncisFiltrats() {
             $anunci = array(
                 'id' => $row['id'],
                 'titolCurt' => $row['titol_anunci'],
-                'foto' => $row['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($row['codi_seccio']) : "img/anuncis/" . $row['foto'],
+                'foto_seccio' => $row['foto'] == null,
+                'dir_foto' => $row['foto'] == null ? "img/seccio/" : "img/anuncis/",
+                'foto' => $row['foto'] == null ? getFotoGenericaSeccio($row['codi_seccio']) : $row['foto'],
             );
             $llistaAnuncis[$row['id']] = $anunci;
 

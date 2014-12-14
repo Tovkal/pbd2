@@ -70,7 +70,7 @@ $(document).ready(function() {
 });
 
 function addRowToTable(id, anunci) {
-    var $foto = $("<td></td>").html("<img src='" + anunci['foto'] + "' style='width:100px;' />").addClass("col-md-2");
+    var $foto = $("<td></td>").html("<img src='" + anunci['dir_foto'] + anunci['foto'] + "' style='width:100px;' />").addClass("col-md-2");
     var $titolCurt = $("<td></td>").text(anunci['titolCurt']).addClass("col-md-2");
     var $dataPub = $("<td></td>").text(anunci['dataWeb']).addClass("col-md-2");
     var $dataNoPub = $("<td></td>").text(anunci['dataNoWeb']).addClass("col-md-2");

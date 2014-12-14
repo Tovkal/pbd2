@@ -33,7 +33,7 @@ $(document).ready(function() {
                 }
 
                 if (resp.status == 'success') {
-                    showSuccess($("#photoAlert"), "S'ha pujat la foto correctament.", 2000);
+                    showSuccess($("#photoAlert"), "S'ha pujat la foto correctament, però encara no s'ha guardat. Acaba de modificar l'anunci, i guarda'l.");
                     $("#photoUpload").hideBootstrap();
                     $("#photoName").val(files[0].name);
                     $("#photo").html("<img src='img/anuncis/" + files[0].name + "' style='display:block;margin:auto;height:100%; width:100%;'>");

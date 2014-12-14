@@ -303,9 +303,11 @@ if(!isset($_SESSION)){
                             $seccio.find("option[value=" + anunci['codi_seccio'] + "]").attr('selected', true);
 
                             if(anunci['foto']) {
-                                $photoName.val(anunci['foto']);
+                                if (!anunci['foto_seccio']) {
+                                    $photoName.val(anunci['foto']);
+                                }
                                 $("#photoUpload").hideBootstrap();
-                                $("#photo").html("<img src='" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
+                                $("#photo").html("<img src='" + anunci['dir_foto'] + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
                                 $("#reuploadPhotoBtn").showBootstrap();
                                 $("#photoPreview").showBootstrap();
                             }
@@ -362,9 +364,8 @@ if(!isset($_SESSION)){
                             $seccio.find("option[value=" + anunci['codi_seccio'] + "]").attr('selected', 'selected');
 
                             if(anunci['foto']) {
-                                $photoName.val(anunci['foto']);
                                 $("#photoUpload").hideBootstrap();
-                                $("#photo").html("<img src='" + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
+                                $("#photo").html("<img src='" + anunci['dir_foto'] + anunci['foto'] + "' style='display:block;margin:auto;height:100%; width:100%;'>");
                                 $("#photoPreview").showBootstrap();
                             }
                         }
