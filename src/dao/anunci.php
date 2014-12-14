@@ -31,6 +31,10 @@ if (Common::is_ajax()) {
             echo json_encode(validateFactura());
         } else if ($_POST['action'] == "facturaUsuariFiltrada") {
             echo json_encode(validateFacturaFiltrada());
+        } else if ($_POST['action'] == "anuncisAmbSeccions") {
+            echo json_encode(fetchAnuncisAmbSeccions());
+        } else if ($_POST['action'] == "anuncisFiltrats") {
+            echo json_encode(fetchAnuncisFiltrats());
         } else {
             $result = array("error" => true, "error_msg" => "Acció desconeguda");
             echo json_encode($result);
@@ -332,8 +336,9 @@ function validateFactura() {
 
 function generateFactura() {
     $db = Common::initPDOConnection("BDII_08");
-    // TODO - tovkal - 08/12/2014 - Parametrizar preu canvi a una taula
-    $sql = "SELECT Anunci.id, Anunci.titol_curt, date(Anunci.data_publicacio) as 'data_publicacio', Seccio.preu as preu_seccio, nombre_canvis, (Seccio.preu + nombre_canvis*0.1) as total FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :id";
+    $sql = "SELECT  Anunci.id, Anunci.titol_curt, date(Anunci.data_publicacio) as 'data_publicacio',
+                    Seccio.preu as preu_seccio, nombre_canvis, (Seccio.preu + nombre_canvis*0.1) as total
+            FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :id";
 
     $select = $db->prepare($sql);
     $wasSuccessful = $select->execute(array('id' => $_POST['id']));
@@ -375,17 +380,16 @@ function validateFacturaFiltrada() {
 
 function generateFacturaFiltrada() {
     $db = Common::initPDOConnection("BDII_08");
-    // TODO - tovkal - 08/12/2014 - Parametrizar preu canvi a una taula
     $sql = "SELECT Anunci.id, Anunci.titol_curt, date(data_publicacio) as 'data_publicacio', Seccio.preu as preu_seccio, nombre_canvis, (Seccio.preu + nombre_canvis*0.1) as total FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE id_usuari = :id";
     $parameters = array('id' => $_POST['id']);
 
     if (isset($_POST['dataInici']) && !empty($_POST['dataInici'])) {
-        $sql = $sql . " AND data_publicacio > :dataInici";
+        $sql = $sql . " AND data_publicacio >= :dataInici";
         $parameters['dataInici'] = parseDateToDBFormat($_POST['dataInici']);
     }
 
     if (isset($_POST['dataFi']) && !empty($_POST['dataFi'])) {
-        $sql = $sql . " AND data_publicacio < :dataFi";
+        $sql = $sql . " AND data_publicacio <= :dataFi";
         $parameters['dataFi'] = parseDateToDBFormat($_POST['dataFi']);
     }
 
@@ -414,6 +418,119 @@ function generateFacturaFiltrada() {
         return array("error" => false, 'anuncis' => $llistaAnuncis, 'preuTotal' => $preuTotal);
     } else {
         return array("error" => true, "error_msg" => "No s'ha pogut eliminar l'anunci. Intenta-ho més tard.", "db_error_msg" => ($select->errorInfo()));
+    }
+}
+
+function fetchAnuncisAmbSeccions() {
+    $db = Common::initPDOConnection("BDII_08");
+    $sql = "SELECT Anunci.id as id, Anunci.titol_curt as titol_anunci, Anunci.foto as foto, Anunci.data_web, Anunci.data_no_web, Seccio.codi_seccio as codi_seccio, Seccio.titol_curt as titol_seccio FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio WHERE data_web <= CURDATE() AND data_no_web >= CURDATE() ORDER BY titol_seccio";
+
+    $select = $db->prepare($sql);
+    $wasSuccessful = $select->execute();
+    if ($wasSuccessful) {
+
+        $resultat = array();
+        foreach($select as $row) {
+            $anunci = array();
+            $seccio = null;
+            if (isset($resultat[$row['titol_seccio']]) && $resultat[$row['titol_seccio']] != null) {
+                $seccio = $resultat[$row['titol_seccio']];
+            } else {
+                $seccio = array();
+            }
+            $llistaAnuncis = null;
+            if (isset($seccio['anuncis']) && $seccio['anuncis'] != null) {
+                $llistaAnuncis = $seccio['anuncis'];
+            } else {
+                $llistaAnuncis = array();
+            }
+
+
+            $anunci = array(
+                'id' => $row['id'],
+                'titolCurt' => $row['titol_anunci'],
+                'foto' => $row['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($row['codi_seccio']) : "img/anuncis/" . $row['foto'],
+            );
+            $llistaAnuncis[$row['id']] = $anunci;
+
+            $seccio['anuncis'] = $llistaAnuncis;
+            $seccio['codi_seccio'] = $row['codi_seccio'];
+
+            $resultat[$row['titol_seccio']] = $seccio;
+        }
+
+        // Close DB connection
+        $db = null;
+
+        return array("error" => false, 'llistaAnuncis' => $resultat);
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut obtenir la llista d'anuncis de la base de dades. Torna a intentar-ho.", "db_error_msg" => ($select->errorInfo()));
+    }
+}
+
+function fetchAnuncisFiltrats() {
+    $db = Common::initPDOConnection("BDII_08");
+
+    $condicionsAdicionals = "";
+
+    if (isset($_POST['seccio']) && !empty($_POST['seccio']) && $_POST['seccio'] != "-1") {
+        $condicionsAdicionals = " AND Anunci.codi_seccio = " . $_POST['seccio'];
+    }
+
+    if (isset($_POST['dataWeb']) && !empty($_POST['dataWeb']) && $_POST['dataWeb'] != "") {
+        $condicionsAdicionals = " AND data_web <= " . parseDateToDBFormat($_POST['dataWeb']);
+    }
+
+    if (isset($_POST['dataNoWeb']) && !empty($_POST['dataNoWeb']) && $_POST['dataNoWeb'] != "") {
+        $condicionsAdicionals = " AND data_no_web <= " . parseDateToDBFormat($_POST['dataNoWeb']);
+    }
+
+    $sql = "SELECT  Anunci.id as id, Anunci.titol_curt as titol_anunci, Anunci.foto as foto, Anunci.data_web,
+                    Anunci.data_no_web, Seccio.codi_seccio as codi_seccio, Seccio.titol_curt as titol_seccio
+            FROM Anunci INNER JOIN Seccio ON Anunci.codi_seccio = Seccio.codi_seccio
+            WHERE data_web <= CURDATE() AND data_no_web >= CURDATE() {$condicionsAdicionals}
+            ORDER BY titol_seccio";
+
+    $select = $db->prepare($sql);
+    $wasSuccessful = $select->execute();
+    if ($wasSuccessful) {
+
+        $resultat = array();
+        foreach($select as $row) {
+            $anunci = array();
+            $seccio = null;
+            if (isset($resultat[$row['titol_seccio']]) && $resultat[$row['titol_seccio']] != null) {
+                $seccio = $resultat[$row['titol_seccio']];
+            } else {
+                $seccio = array();
+            }
+            $llistaAnuncis = null;
+            if (isset($seccio['anuncis']) && $seccio['anuncis'] != null) {
+                $llistaAnuncis = $seccio['anuncis'];
+            } else {
+                $llistaAnuncis = array();
+            }
+
+
+            $anunci = array(
+                'id' => $row['id'],
+                'titolCurt' => $row['titol_anunci'],
+                'foto' => $row['foto'] == null ? "img/seccio/" . getFotoGenericaSeccio($row['codi_seccio']) : "img/anuncis/" . $row['foto'],
+            );
+            $llistaAnuncis[$row['id']] = $anunci;
+
+            $seccio['anuncis'] = $llistaAnuncis;
+            $seccio['codi_seccio'] = $row['codi_seccio'];
+
+            $resultat[$row['titol_seccio']] = $seccio;
+        }
+
+        // Close DB connection
+        $db = null;
+
+        return array("error" => false, 'llistaAnuncis' => $resultat);
+    } else {
+        return array("error" => true, "error_msg" => "No s'ha pogut obtenir la llista d'anuncis de la base de dades. Torna a intentar-ho.", "db_error_msg" => ($select->errorInfo()));
     }
 }
 
