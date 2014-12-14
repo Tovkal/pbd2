@@ -74,14 +74,14 @@ function validateEdit() {
 
 function getSeccioList() {
     $db = Common::initPDOConnection("BDII_08");
-    $select = $db->prepare("SELECT codi_seccio, titol_curt FROM Seccio WHERE activa = 1");
+    $select = $db->prepare("SELECT codi_seccio, titol_curt FROM Seccio WHERE activa = 1 ORDER BY titol_curt");
 
     $wasSuccessful = $select->execute();
     if ($wasSuccessful) {
 
         $seccions = array();
         foreach($select as $seccio) {
-            $seccions[$seccio['codi_seccio']] = $seccio['titol_curt'];
+            $seccions[$seccio['titol_curt']] = $seccio['codi_seccio'];
         }
 
         // Close DB connection
