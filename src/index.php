@@ -13,8 +13,8 @@ if(!isset($_SESSION)) {
 </head>
 <body>
 
-<div class="wrapper container-fluid">
-    <div class="row column border">
+<div class="container-fluid">
+    <div class="row column header">
         <div class="col-md-9" >
             <a href="index.php">
                 <img src="img/logo.png" class="logo" />
@@ -22,11 +22,11 @@ if(!isset($_SESSION)) {
         </div>
     </div>
     <div class="row column">
-        <div id="content" class="col-md-9 border">
+        <div id="content" class="col-md-9">
             <div id="mainAlert" class="hidden" role="alert"></div>
             <div id="filters">
                 <form id="filterForm" role="form">
-                    <h5>Filtra la cerca d'anuncis:</h5>
+                    <h4>Filtra la cerca d'anuncis:</h4>
                     <div class="row">
                         <div id="filtreSeccio" class="col-md-5">
                             <div class="form-group">
@@ -81,9 +81,10 @@ if(!isset($_SESSION)) {
                     </div>
                 </form>
             </div>
+            <hr>
             <div id="anuncisContainer" style="padding: 5px;"></div>
         </div>
-        <div id="menuColumn" class="col-md-3 border column">
+        <div id="menuColumn" class="col-md-3 column">
             <?php include 'menu.php';?>
         </div>
     </div>
@@ -141,12 +142,12 @@ if(!isset($_SESSION)) {
     }
 
     function crearSeccioAnuncis(key, result) {
-        return $("<div></div>").append(crearCapçaleraSeccio(key, result['codi_seccio'])).append(crearLlistaAnuncis(result['anuncis']));
+        return $("<div></div>").addClass("groupAnunci").append(crearCapçaleraSeccio(key, result['codi_seccio'])).append(crearLlistaAnuncis(result['anuncis']));
     }
 
     function crearCapçaleraSeccio(titol_seccio, codi_seccio) {
         var $titolCapçalera = $("<h3></h3>").text(titol_seccio).addClass('titol-capçalera-seccio');
-        return $("<div></div>").attr("id", "seccio" + codi_seccio).addClass("row").addClass("border").append($titolCapçalera);
+        return $("<div></div>").attr("id", "seccio" + codi_seccio).addClass("row").addClass("border").addClass("seccio").append($titolCapçalera);
     }
 
     function crearLlistaAnuncis(anuncis) {

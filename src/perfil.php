@@ -42,8 +42,8 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
 </head>
 <body>
 
-<div class="wrapper container-fluid">
-    <div class="row column border">
+<div class="container-fluid">
+    <div class="row column header">
         <div class="col-md-9" >
             <a href="index.php">
                 <img src="img/logo.png" class="logo" />
@@ -51,7 +51,9 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
         </div>
     </div>
     <div class="row">
-        <div id="content" class="col-md-9 border">
+        <div id="content" class="col-md-9">
+            <h2>Modificar perfil</h2>
+            <hr>
             <div class="row row-top-margin" style="padding-right: 10px; padding-left: 10px;">
                 <div class="col-md-12">
                     <div id="mainAlert" class="hidden" role="alert">Alert</div>
@@ -103,7 +105,7 @@ if (!isset($_SESSION['descripcio_privilegi']) || empty($_SESSION['descripcio_pri
                 </div>
             </div>
         </div>
-        <div id="menuColumn" class="col-md-3 border">
+        <div id="menuColumn" class="col-md-3">
             <?php include 'menu.php';?>
         </div>
     </div>

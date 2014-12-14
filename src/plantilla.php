@@ -16,8 +16,8 @@ if(!isset($_SESSION)){
 </head>
 <body>
 
-<div class="wrapper container-fluid">
-    <div class="row column border">
+<div class="container-fluid">
+    <div class="row column">
         <div class="col-md-9" >
             <a href="index.php">
                 <img src="img/logo.png" class="logo" />
@@ -25,8 +25,8 @@ if(!isset($_SESSION)){
         </div>
     </div>
     <div class="row">
-        <div id="content" class="col-md-9 border">&nbsp;</div>
-        <div id="menuColumn" class="col-md-3 border">
+        <div id="content" class="col-md-9">&nbsp;</div>
+        <div id="menuColumn" class="col-md-3">
             <?php include 'menu.php';?>
         </div>
     </div>

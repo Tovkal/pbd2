@@ -27,8 +27,8 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
 </head>
 <body>
 
-<div class="wrapper container-fluid">
-    <div class="row column border">
+<div class="container-fluid">
+    <div class="row column header">
         <div class="col-md-9" >
             <a href="index.php">
                 <img src="img/logo.png" class="logo" />
@@ -36,8 +36,8 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
         </div>
     </div>
     <div class="row">
-        <div id="content" class="col-md-9 border">
-            <h3>Administració d'usuaris</h3>
+        <div id="content" class="col-md-9">
+            <h2>Administració d'usuaris</h2>
             <hr>
             <div id="mainAlert" class="hidden" role="alert"></div>
 
@@ -56,7 +56,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                 </div>
             </div>
         </div>
-        <div id="menuColumn" class="col-md-3 border">
+        <div id="menuColumn" class="col-md-3">
             <?php include 'menu.php';?>
         </div>
     </div>

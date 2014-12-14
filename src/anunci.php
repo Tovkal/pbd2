@@ -26,8 +26,8 @@ if(!isset($_SESSION)){
         $("#photoProgressBar").width('0%');
     }
 </script>
-<div class="wrapper container-fluid">
-    <div class="row column border">
+<div class="container-fluid">
+    <div class="row column header">
         <div class="col-md-9" >
             <a href="index.php">
                 <img src="img/logo.png" class="logo" />
@@ -35,7 +35,7 @@ if(!isset($_SESSION)){
         </div>
     </div>
     <div class="row">
-        <div id="content" class="col-md-9 border">
+        <div id="content" class="col-md-9">
             <form id="anunciForm" class="form" role="form" style="margin-bottom: 0;">
                 <input id="action" name="action" type="hidden" />
                 <input id="idAnunci" name="idAnunci" type="hidden" />
@@ -167,7 +167,7 @@ if(!isset($_SESSION)){
                 </div>
             </div>
         </div>
-        <div id="menuColumn" class="col-md-3 border">
+        <div id="menuColumn" class="col-md-3">
             <?php include 'menu.php';?>
         </div>
     </div>
