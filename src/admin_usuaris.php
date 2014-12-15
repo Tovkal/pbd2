@@ -66,7 +66,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tancar</span></button>
                 <h4 class="modal-title" id="titolModal">Factura del usuari</h4>
             </div>
             <div class="modal-body">
@@ -132,9 +132,9 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                     <hr>
                     <div>
                         <table id="facturaTable" class="table table-striped">
-                            <thead>
+                            <thead>d
                             <tr>
-                                <th class="col-md-3">Titol</th>
+                                <th class="col-md-3">Títol anunci</th>
                                 <th class="col-md-2">Data publicació</th>
                                 <th class="col-md-2">Preu secció</th>
                                 <th class="col-md-2">Nombre canvis</th>
@@ -146,7 +146,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tancar</button>
             </div>
         </div>
     </div>
