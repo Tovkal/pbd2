@@ -38,7 +38,7 @@ if($_FILES['SelectedFile']['type'] == 'image/png' || $_FILES['SelectedFile']['ty
     }
 
     // Upload file
-    if(!move_uploaded_file($_FILES['SelectedFile']['tmp_name'], '../img/anuncis/' . $_FILES['SelectedFile']['name'])){
+    if(!move_uploaded_file($_FILES['SelectedFile']['tmp_name'], '../img/anuncis/' . $_FILES['SelectedFile']['name'])) {
         outputJSON('Error uploading file - check destination is writeable.');
     }
 
