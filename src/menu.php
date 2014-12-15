@@ -48,7 +48,7 @@ if(!isset($_SESSION)){
 
             <div class="row row-centered">
                 <button id="loginButton" type="button" class="btn btn-primary hideOnLogin" onclick="doLogin();">Accedir</button>
-                <button id="signupButton" type="button" class="btn btn-primary hideOnLogin" onclick="doSignup();">Donar'se d'alta</button>
+                <button id="signupButton" type="button" class="btn btn-primary hideOnLogin" onclick="doSignup();">Donar-se d'alta</button>
                 <button id="modifyProfileButton" type="button" class="btn btn-primary hideLoggedOut hidden" onclick="modifyProfile();">Modificar perfil</button>
                 <button id="logoutButton" type="button" class="btn btn-primary hideLoggedOut hidden" onclick="doLogout();">Logout</button>
             </div>
