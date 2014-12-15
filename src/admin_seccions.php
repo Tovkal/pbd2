@@ -372,6 +372,12 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
             }
         });
     }
+
+    function reuploadPhoto() {
+        $("#reuploadPhotoBtn").hideBootstrap();
+        $("#photoUpload").showBootstrap();
+        $("#photoProgressBar").width('0%');
+    }
 </script>
 
 </body>
