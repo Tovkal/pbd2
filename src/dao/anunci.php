@@ -377,6 +377,8 @@ function validateFacturaFiltrada() {
             return generateFactura();
         } else if ((isset($_POST['dataInici']) && !empty($_POST['dataInici'])) || (isset($_POST['dataFi']) && !empty($_POST['dataFi']))) {
             return generateFacturaFiltrada();
+        } else if (((isset($_POST['dataInici']) && empty($_POST['dataInici'])) || (isset($_POST['dataFi']) && empty($_POST['dataFi'])))) {
+            return array("error" => true, "error_msg" => "Has d'inserir les dues dates de per filtrar");
         }
     }
     return array("error" => true, "error_msg" => "No s'ha rebut la id de l'usuari del qual es vol emetre la factura. Torni a intentar-ho");
