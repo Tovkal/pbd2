@@ -92,7 +92,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                                     <div class="form-group">
                                         <label for="dataWeb">Des de (inclòs)</label>
                                         <div class='input-group date' id='dataWeb'>
-                                            <input type='text' id="dataWebInput" name="dataWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
+                                            <input type='text' id="dataWebInput" name="dataInici" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
@@ -103,7 +103,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                                     <div class="form-group">
                                         <label for="dataNoWeb">Fins (inclòs)</label>
                                         <div class='input-group date' id='dataNoWeb'>
-                                            <input type='text' id="dataNoWebInput" name="dataNoWeb" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
+                                            <input type='text' id="dataNoWebInput" name="dataFi" class="form-control obligatori" data-date-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" />
                                 <span class="input-group-addon">
 						            <span class="glyphicon glyphicon-calendar"></span>
 					            </span>
@@ -132,7 +132,7 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
                     <hr>
                     <div>
                         <table id="facturaTable" class="table table-striped">
-                            <thead>d
+                            <thead>
                             <tr>
                                 <th class="col-md-3">Títol anunci</th>
                                 <th class="col-md-2">Data publicació</th>
@@ -287,7 +287,11 @@ if (!isset($_SESSION['userID']) || empty($_SESSION['userID'])
 
                 if (result) {
                     if (result['error'] == true) {
-                        $facturaTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació dels usuaris. Intenta actualtizar la pàgina.</td></tr>");
+                        if (result['db_msg_error'] == undefined) {
+                            $facturaTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>Has d'inserir les dues dates de per filtrar</td></tr>");
+                        } else {
+                            $facturaTable.append("<tr class='danger'><td colspan='4' style='text-align:center;'>No s'ha pogut carregar la informació dels usuaris. Intenta actualtizar la pàgina.</td></tr>");
+                        }
                         console.log(result['db_msg_error']);
                     } else {
                         $facturaTable.find("tbody").remove();
