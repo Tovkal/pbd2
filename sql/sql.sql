@@ -48,13 +48,18 @@ CREATE TABLE IF NOT EXISTS Anunci (
 
 CREATE TRIGGER increment_nombre_canvis_set_hora_data_no_web 
 BEFORE UPDATE ON Anunci FOR EACH ROW 
-	SET NEW.nombre_canvis = OLD.nombre_canvis + 1, NEW.data_no_web = CONCAT_WS(' ', DATE(OLD.data_no_web), '23:59:59');
-
-CREATE TRIGGER set_hora_data_no_web_insert
-BEFORE INSERT ON Anunci FOR EACH ROW
-	SET NEW.data_no_web = CONCAT_WS(' ', DATE(NEW.data_no_web), '23:59:59');
+	SET NEW.nombre_canvis = OLD.nombre_canvis + 1;
 
 INSERT INTO Privilegi (descripcio) VALUES ('Administrador'), ('Anunciant');
-INSERT INTO Seccio (titol_curt, preu, foto_generica_seccio) VALUES ('Vivendes', '1', 'casa.png'), ('Cotxes', '0.5', 'cotxo.png'), ('Ordinadors', '0.25', 'alienware.png');
-INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES ('admin', '1234', 'Jaume Más', 1);
-INSERT INTO Anunci (id_usuari, titol_curt, telefon, data_web, data_no_web, codi_seccio) VALUES ('1', 'asdasdsadsadas', '123123123', '2014-12-06', '2014-12-06', '1');
+INSERT INTO Seccio (titol_curt, descripcio, preu, foto_generica_seccio) VALUES ('Vivendes', "Tot tipus d'habitatges, però per favor que siguin legals per evitar problemes.", '10', 'casa.png'), ('Cotxes', 'Cotxes nous o vells a la venda.', '25', 'cotxo.png'), ('Ordinadors', 'Ordenadors o components de primera o segona mà.', '30', 'alienware.png');
+INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES ('admin', '1234', 'Jaume Mas', 1);
+INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES ('anunciant', 'vulldoblers', 'Tofol Gelabert', 2);
+INSERT INTO Usuari (userID, password, nom, id_privilegi) VALUES ('barato', 'moltBarato', 'Mado Pereta', 2);
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, telefon, data_web, data_no_web, codi_seccio, foto, nombre_canvis) VALUES ('2', 'Opel Corsa', 'Vendo Opel Corsa, siempre en garaje. Full equipe. 5000€, no negociables.', '666666666', '2014-12-15', '2015-02-01', '2', 'opel_corsa.jpg', 10);
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, telefon, data_web, data_no_web, codi_seccio, nombre_canvis) VALUES ('2', 'Xalet amoblat', 'Bé, realment no te molt de mobles. Esta pendent de obtenir els permissos de construcció. 400 metres quadrats, terreno de 2000. 100.000€, només en efectiu per favor.', '666666666', '2014-12-15', '2015-05-01', '1', 5);
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, foto,telefon, data_web, data_no_web, codi_seccio, nombre_canvis) VALUES ('3', 'Dell Inspiron', 'Portatil 17 polsades com a nou.', 'dell_inspi.jpg', '666666666', '2014-12-15', '2015-02-01', '3', 7);
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, telefon, data_web, data_no_web, codi_seccio, nombre_canvis, foto) VALUES ('2', 'Ferrari La Ferrari', 'Esta nou, regalat per un cosí que tinc pes Marroc.', '666666666', '2014-12-15', '2015-05-01', '2', 1, 'ferrari_la_ferrari.jpg');
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, telefon, data_web, data_no_web, codi_seccio, foto, nombre_canvis) VALUES ('1', 'BMW X1 de 2013', "El propietari anterior, Don Gabriel Fontenet, m'ha encarregat vendre aquest vehicle per compra d'un Jaguar. Esta ben nou.", '666666666', '2014-12-15', '2015-02-01', '2', 'bmw_x1.jpg', 5);
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, telefon, data_web, data_no_web, codi_seccio, nombre_canvis, foto) VALUES ('2', 'Mitsubishi Evo XII', 'Venc perque es va rompre el motor i no tinc doblers per pagar. La resta va perfecte. Cridau per venir a provar-lo.', '666666666', '2014-12-15', '2015-03-01', '2', 6, 'Mitsubishi_Lancer_EVO_X.jpg');
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, telefon, data_web, data_no_web, codi_seccio, nombre_canvis, foto) VALUES ('3', 'Seat 600', 'Vendo coche familiar, en perfecto estado de consevación. Contactar conmigo para verlo. Está en Artà.', '666666666', '2014-12-15', '2015-02-01', '2', 7, 'Seat_600_red_hl_TCE.jpg');
+INSERT INTO Anunci (id_usuari, titol_curt, text_anunci, telefon, data_web, data_no_web, codi_seccio, nombre_canvis, foto) VALUES ('2', 'Palau de Marivent', "En venda perque el poble fa pressió per recuperar els doblers. Criuda per venir a veure'l", '666666666', '2014-12-15', '2015-02-01', '1', 8, 'marivent.jpg');
